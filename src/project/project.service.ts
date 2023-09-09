@@ -1,26 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import { CreateProjectDto } from './dto/create-project.dto';
-import { UpdateProjectDto } from './dto/update-project.dto';
+import { PrismaService } from '../prisma.service';
+import { Prisma, Project } from '@prisma/client';
 
 @Injectable()
 export class ProjectService {
-  create(createProjectDto: CreateProjectDto) {
-    return 'This action adds a new project';
+  constructor(private prisma: PrismaService) {}
+
+  async getOne(
+    project: Prisma.ProjectWhereUniqueInput,
+  ): Promise<Project | null> {
+    return this.prisma.project.findUnique({ where: project });
   }
 
-  findAll() {
-    return `This action returns all project`;
+  async getAll(
+    skip?: number,
+    take?: number,
+    cursor?: Prisma.ProjectWhereUniqueInput,
+    where?: Prisma.ProjectWhereInput,
+    orderBy?: Prisma.ProjectOrderByWithRelationInput,
+  ): Promise<Project[]> {
+    return this.prisma.project.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} project`;
+  async create(data: Prisma.ProjectCreateInput): Promise<Project> {
+    return this.prisma.project.create({ data });
   }
 
-  update(id: number, updateProjectDto: UpdateProjectDto) {
-    return `This action updates a #${id} project`;
+  async update(
+    where: Prisma.ProjectWhereUniqueInput,
+    data: Prisma.ProjectUpdateInput,
+  ): Promise<Project> {
+    return this.prisma.project.update({ data, where });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} project`;
+  async del(where: Prisma.ProjectWhereUniqueInput): Promise<Project> {
+    return this.prisma.project.delete({ where });
   }
 }

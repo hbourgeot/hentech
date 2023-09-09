@@ -1,26 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import { CreateDocumentDto } from './dto/create-document.dto';
-import { UpdateDocumentDto } from './dto/update-document.dto';
+import { PrismaService } from '../prisma.service';
+import { Prisma, Document } from '@prisma/client';
 
 @Injectable()
 export class DocumentService {
-  create(createDocumentDto: CreateDocumentDto) {
-    return 'This action adds a new document';
+  constructor(private prisma: PrismaService) {}
+
+  async getOne(
+    document: Prisma.DocumentWhereUniqueInput,
+  ): Promise<Document | null> {
+    return this.prisma.document.findUnique({ where: document });
   }
 
-  findAll() {
-    return `This action returns all document`;
+  async getAll(
+    skip?: number,
+    take?: number,
+    cursor?: Prisma.DocumentWhereUniqueInput,
+    where?: Prisma.DocumentWhereInput,
+    orderBy?: Prisma.DocumentOrderByWithRelationInput,
+  ): Promise<Document[]> {
+    return this.prisma.document.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} document`;
+  async create(data: Prisma.DocumentCreateInput): Promise<Document> {
+    return this.prisma.document.create({ data });
   }
 
-  update(id: number, updateDocumentDto: UpdateDocumentDto) {
-    return `This action updates a #${id} document`;
+  async update(
+    where: Prisma.DocumentWhereUniqueInput,
+    data: Prisma.DocumentUpdateInput,
+  ): Promise<Document> {
+    return this.prisma.document.update({ data, where });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} document`;
+  async del(where: Prisma.DocumentWhereUniqueInput): Promise<Document> {
+    return this.prisma.document.delete({ where });
   }
 }

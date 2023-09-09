@@ -1,26 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import { CreateEmployeeDto } from './dto/create-employee.dto';
-import { UpdateEmployeeDto } from './dto/update-employee.dto';
+import { PrismaService } from '../prisma.service';
+import { Prisma, Employee } from '@prisma/client';
 
 @Injectable()
 export class EmployeeService {
-  create(createEmployeeDto: CreateEmployeeDto) {
-    return 'This action adds a new employee';
+  constructor(private prisma: PrismaService) {}
+
+  async getOne(
+    employee: Prisma.EmployeeWhereUniqueInput,
+  ): Promise<Employee | null> {
+    return this.prisma.employee.findUnique({ where: employee });
   }
 
-  findAll() {
-    return `This action returns all employee`;
+  async getAll(
+    skip?: number,
+    take?: number,
+    cursor?: Prisma.EmployeeWhereUniqueInput,
+    where?: Prisma.EmployeeWhereInput,
+    orderBy?: Prisma.EmployeeOrderByWithRelationInput,
+  ): Promise<Employee[]> {
+    return this.prisma.employee.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} employee`;
+  async create(data: Prisma.EmployeeCreateInput): Promise<Employee> {
+    return this.prisma.employee.create({ data });
   }
 
-  update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
-    return `This action updates a #${id} employee`;
+  async update(
+    where: Prisma.EmployeeWhereUniqueInput,
+    data: Prisma.EmployeeUpdateInput,
+  ): Promise<Employee> {
+    return this.prisma.employee.update({ data, where });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} employee`;
+  async del(where: Prisma.EmployeeWhereUniqueInput): Promise<Employee> {
+    return this.prisma.employee.delete({ where });
   }
 }

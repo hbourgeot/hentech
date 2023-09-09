@@ -6,10 +6,16 @@ import { VersionModule } from './version/version.module';
 import { DocumentModule } from './document/document.module';
 import { TaskModule } from './task/task.module';
 import { ProjectModule } from './project/project.module';
-import { EmployeeModule } from './employee/employee.module';
 
 @Module({
-  imports: [EmployeeModule, ProjectModule, TaskModule, DocumentModule, VersionModule, AuthModule],
+  imports: [
+    EmployeeModule,
+    ProjectModule,
+    TaskModule,
+    DocumentModule,
+    VersionModule,
+    AuthModule,
+  ],
   controllers: [],
   providers: [PrismaService],
 })

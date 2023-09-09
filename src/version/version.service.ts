@@ -1,26 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import { CreateVersionDto } from './dto/create-version.dto';
-import { UpdateVersionDto } from './dto/update-version.dto';
+import { PrismaService } from '../prisma.service';
+import { Prisma, Version } from '@prisma/client';
 
 @Injectable()
 export class VersionService {
-  create(createVersionDto: CreateVersionDto) {
-    return 'This action adds a new version';
+  constructor(private prisma: PrismaService) {}
+
+  async getOne(
+    version: Prisma.VersionWhereUniqueInput,
+  ): Promise<Version | null> {
+    return this.prisma.version.findUnique({ where: version });
   }
 
-  findAll() {
-    return `This action returns all version`;
+  async getAll(
+    skip?: number,
+    take?: number,
+    cursor?: Prisma.VersionWhereUniqueInput,
+    where?: Prisma.VersionWhereInput,
+    orderBy?: Prisma.VersionOrderByWithRelationInput,
+  ): Promise<Version[]> {
+    return this.prisma.version.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} version`;
+  async create(data: Prisma.VersionCreateInput): Promise<Version> {
+    return this.prisma.version.create({ data });
   }
 
-  update(id: number, updateVersionDto: UpdateVersionDto) {
-    return `This action updates a #${id} version`;
+  async update(
+    where: Prisma.VersionWhereUniqueInput,
+    data: Prisma.VersionUpdateInput,
+  ): Promise<Version> {
+    return this.prisma.version.update({ data, where });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} version`;
+  async del(where: Prisma.VersionWhereUniqueInput): Promise<Version> {
+    return this.prisma.version.delete({ where });
   }
 }
