@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Employee {
+  id Int @id
+  name String
+  lastName String
+  address String
+  email String @unique
+  phoneNumber String
+  ledProjects Project[] @relation("ProjectToLeader") // N:1 relación con Project como líder
+  employeeProjects EmployeeProject[] // N:N relación con Project
+}
+
+// Tabla intermedia para la relación N:N entre Employee y Project
+model EmployeeProject {
+  employeeId Int
+  projectId Int
+  employee Employee @relation(fields: [employeeId], references: [id])
+  project Project @relation(fields: [projectId], references: [id])
+
+  @@id([employeeId, projectId])
+}
+
+model Project {
+  id Int @id
+  name String
+  comercialDesignation String
+  status String
+  leaderId Int
+  leader Employee @relation("ProjectToLeader", fields: [leaderId], references: [id])
+  tasks Task[] // N:1 relación con Task
+  employeeProjects EmployeeProject[] // N:N relación con Employee
+}
+
+model Task {
+  id Int @default(autoincrement()) @id
+  description String
+  estimatedDuration String
+  actualDuration String
+  estimatedDate DateTime
+  actualDate DateTime
+  type String
+  projectId Int
+  project Project @relation(fields: [projectId], references: [id])
+  documents Document[] // N:1 relación con Document
+}
+
+model Document {
+  id Int @default(autoincrement()) @id
+  specificationDocument String
+  sourceCode String
+  description String
+  type String
+  taskId Int
+  task Task @relation(fields: [taskId], references: [id])
+  versions Version[] // N:1 relación con Version
+}
+
+model Version {
+  id Int @default(autoincrement()) @id
+  date DateTime
+  description String
+  tag String
+  documentId Int
+  document Document @relation(fields: [documentId], references: [id])
+}
