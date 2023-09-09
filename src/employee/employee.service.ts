@@ -6,10 +6,8 @@ import { Prisma, Employee } from '@prisma/client';
 export class EmployeeService {
   constructor(private prisma: PrismaService) {}
 
-  async getOne(
-    employee: Prisma.EmployeeWhereUniqueInput,
-  ): Promise<Employee | null> {
-    return this.prisma.employee.findUnique({ where: employee });
+  async getOne(id: number): Promise<Employee | null> {
+    return this.prisma.employee.findUnique({ where: { id: id } });
   }
 
   async getAll(
