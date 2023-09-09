@@ -6,10 +6,8 @@ import { Prisma, Version } from '@prisma/client';
 export class VersionService {
   constructor(private prisma: PrismaService) {}
 
-  async getOne(
-    version: Prisma.VersionWhereUniqueInput,
-  ): Promise<Version | null> {
-    return this.prisma.version.findUnique({ where: version });
+  async getOne(version: number): Promise<Version | null> {
+    return this.prisma.version.findUnique({ where: { id: version } });
   }
 
   async getAll(

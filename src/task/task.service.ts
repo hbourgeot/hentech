@@ -6,8 +6,8 @@ import { Prisma, Task } from '@prisma/client';
 export class TaskService {
   constructor(private prisma: PrismaService) {}
 
-  async getOne(task: Prisma.TaskWhereUniqueInput): Promise<Task | null> {
-    return this.prisma.task.findUnique({ where: task });
+  async getOne(task: number): Promise<Task | null> {
+    return this.prisma.task.findUnique({ where: { id: task } });
   }
 
   async getAll(

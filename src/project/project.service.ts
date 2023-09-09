@@ -6,10 +6,8 @@ import { Prisma, Project } from '@prisma/client';
 export class ProjectService {
   constructor(private prisma: PrismaService) {}
 
-  async getOne(
-    project: Prisma.ProjectWhereUniqueInput,
-  ): Promise<Project | null> {
-    return this.prisma.project.findUnique({ where: project });
+  async getOne(project: number): Promise<Project | null> {
+    return this.prisma.project.findUnique({ where: { id: project } });
   }
 
   async getAll(

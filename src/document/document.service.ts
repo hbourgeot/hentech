@@ -6,10 +6,8 @@ import { Prisma, Document } from '@prisma/client';
 export class DocumentService {
   constructor(private prisma: PrismaService) {}
 
-  async getOne(
-    document: Prisma.DocumentWhereUniqueInput,
-  ): Promise<Document | null> {
-    return this.prisma.document.findUnique({ where: document });
+  async getOne(document: number): Promise<Document | null> {
+    return this.prisma.document.findUnique({ where: { id: document } });
   }
 
   async getAll(
