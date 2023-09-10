@@ -15,7 +15,10 @@ export class ProjectService {
   ) {}
 
   async getOne(project: number): Promise<Project | null> {
-    return this.repo.findOne({ where: { id: project } });
+    return this.repo.findOne({
+      where: { id: project },
+      relations: { leader: true, tasks: true, employees: true },
+    });
   }
 
   async getAll(
@@ -24,7 +27,13 @@ export class ProjectService {
     where?: FindOptionsWhere<Project>,
     order?: FindOptionsOrder<Project>,
   ): Promise<Project[]> {
-    return await this.repo.find({ skip, take, where, order });
+    return await this.repo.find({
+      skip,
+      take,
+      where,
+      order,
+      relations: { leader: true, tasks: true, employees: true },
+    });
   }
 
   async create(data: Project): Promise<Project> {
