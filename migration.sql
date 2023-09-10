@@ -1,11 +1,11 @@
 -- CreateTable
 CREATE TABLE "Employee" (
     "id" INTEGER NOT NULL,
-    "name" TEXT NOT NULL,
-    "lastName" TEXT NOT NULL,
-    "address" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "phoneNumber" TEXT NOT NULL,
+    "name" CHARACTER VARYING(50) NOT NULL,
+    "lastName" CHARACTER VARYING(50) NOT NULL,
+    "address" CHARACTER VARYING(200) NOT NULL,
+    "email" CHARACTER VARYING(100) NOT NULL,
+    "phoneNumber" CHARACTER VARYING(50) NOT NULL,
 
     CONSTRAINT "Employee_pkey" PRIMARY KEY ("id")
 );
@@ -21,23 +21,22 @@ CREATE TABLE "EmployeeProject" (
 -- CreateTable
 CREATE TABLE "Project" (
     "id" INTEGER NOT NULL,
-    "name" TEXT NOT NULL,
-    "comercialDesignation" TEXT NOT NULL,
-    "status" TEXT NOT NULL,
+    "name" CHARACTER VARYING(50) NOT NULL,
+    "comercialDesignation" CHARACTER VARYING(50) NOT NULL,
+    "status" CHARACTER VARYING(50) NOT NULL,
     "leaderId" INTEGER NOT NULL,
 
     CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
 CREATE TABLE "Task" (
     "id" SERIAL NOT NULL,
-    "description" TEXT NOT NULL,
-    "estimatedDuration" TEXT NOT NULL,
-    "actualDuration" TEXT NOT NULL,
-    "estimatedDate" TIMESTAMP(3) NOT NULL,
-    "actualDate" TIMESTAMP(3) NOT NULL,
-    "type" TEXT NOT NULL,
+    "description" CHARACTER VARYING(200) NOT NULL,
+    "estimatedDuration" CHARACTER VARYING(50) NOT NULL,
+    "actualDuration" CHARACTER VARYING(50) NOT NULL,
+    "estimatedDate" TIMESTAMPTZ NOT NULL,
+    "actualDate" TIMESTAMPTZ NOT NULL,
+    "type" CHARACTER VARYING(50) NOT NULL,
     "projectId" INTEGER NOT NULL,
 
     CONSTRAINT "Task_pkey" PRIMARY KEY ("id")
@@ -46,10 +45,10 @@ CREATE TABLE "Task" (
 -- CreateTable
 CREATE TABLE "Document" (
     "id" SERIAL NOT NULL,
-    "specificationDocument" TEXT NOT NULL,
-    "sourceCode" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
+    "specificationDocument" CHARACTER VARYING(200) NOT NULL,
+    "sourceCode" CHARACTER VARYING(200) NOT NULL,
+    "description" CHARACTER VARYING(200) NOT NULL,
+    "type" CHARACTER VARYING(50) NOT NULL,
     "taskId" INTEGER NOT NULL,
 
     CONSTRAINT "Document_pkey" PRIMARY KEY ("id")
@@ -59,8 +58,8 @@ CREATE TABLE "Document" (
 CREATE TABLE "Version" (
     "id" SERIAL NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
-    "description" TEXT NOT NULL,
-    "tag" TEXT NOT NULL,
+    "description" CHARACTER VARYING(200) NOT NULL,
+    "tag" CHARACTER VARYING(50) NOT NULL,
     "documentId" INTEGER NOT NULL,
 
     CONSTRAINT "Version_pkey" PRIMARY KEY ("id")

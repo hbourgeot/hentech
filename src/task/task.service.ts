@@ -1,43 +1,43 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { Prisma, Task } from '@prisma/client';
+import { Inject, Injectable } from '@nestjs/common';
+import { Task } from 'src/task/entity/task.entity';
+import {
+  DeleteResult,
+  FindOptionsOrder,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 @Injectable()
 export class TaskService {
-  constructor(private prisma: PrismaService) {}
+  constructor(@Inject('TASK_REPOSITORY') private repo: Repository<Task>) {}
 
-  async getOne(task: number): Promise<Task | null> {
-    return this.prisma.task.findUnique({ where: { id: task } });
+  async getOne(document: number): Promise<Task | null> {
+    return this.repo.findOne({ where: { id: document } });
   }
 
   async getAll(
     skip?: number,
     take?: number,
-    cursor?: Prisma.TaskWhereUniqueInput,
-    where?: Prisma.TaskWhereInput,
-    orderBy?: Prisma.TaskOrderByWithRelationInput,
+    where?: FindOptionsWhere<Task>,
+    order?: FindOptionsOrder<Task>,
   ): Promise<Task[]> {
-    return this.prisma.task.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-    });
+    return await this.repo.find({ skip, take, where, order });
   }
 
-  async create(data: Prisma.TaskCreateInput): Promise<Task> {
-    return this.prisma.task.create({ data });
+  async create(data: Task): Promise<Task> {
+    return await this.repo.save(data);
   }
 
   async update(
-    where: Prisma.TaskWhereUniqueInput,
-    data: Prisma.TaskUpdateInput,
+    where: FindOptionsWhere<Task>,
+    data: QueryDeepPartialEntity<Task>,
   ): Promise<Task> {
-    return this.prisma.task.update({ data, where });
+    await this.repo.update(where, data);
+    return await this.repo.findOneByOrFail(where);
   }
 
-  async del(where: Prisma.TaskWhereUniqueInput): Promise<Task> {
-    return this.prisma.task.delete({ where });
+  async del(criteria: FindOptionsWhere<Task>): Promise<DeleteResult> {
+    return await this.repo.delete(criteria);
   }
 }

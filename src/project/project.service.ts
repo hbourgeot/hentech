@@ -1,43 +1,45 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { Prisma, Project } from '@prisma/client';
+import { Inject, Injectable } from '@nestjs/common';
+import {
+  DeleteResult,
+  FindOptionsOrder,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { Project } from './entity/project.entity';
 
 @Injectable()
 export class ProjectService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @Inject('PROJECT_REPOSITORY') private repo: Repository<Project>,
+  ) {}
 
   async getOne(project: number): Promise<Project | null> {
-    return this.prisma.project.findUnique({ where: { id: project } });
+    return this.repo.findOne({ where: { id: project } });
   }
 
   async getAll(
     skip?: number,
     take?: number,
-    cursor?: Prisma.ProjectWhereUniqueInput,
-    where?: Prisma.ProjectWhereInput,
-    orderBy?: Prisma.ProjectOrderByWithRelationInput,
+    where?: FindOptionsWhere<Project>,
+    order?: FindOptionsOrder<Project>,
   ): Promise<Project[]> {
-    return this.prisma.project.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-    });
+    return await this.repo.find({ skip, take, where, order });
   }
 
-  async create(data: Prisma.ProjectCreateInput): Promise<Project> {
-    return this.prisma.project.create({ data });
+  async create(data: Project): Promise<Project> {
+    return await this.repo.save(data);
   }
 
   async update(
-    where: Prisma.ProjectWhereUniqueInput,
-    data: Prisma.ProjectUpdateInput,
+    where: FindOptionsWhere<Project>,
+    data: QueryDeepPartialEntity<Project>,
   ): Promise<Project> {
-    return this.prisma.project.update({ data, where });
+    await this.repo.update(where, data);
+    return await this.repo.findOneByOrFail(where);
   }
 
-  async del(where: Prisma.ProjectWhereUniqueInput): Promise<Project> {
-    return this.prisma.project.delete({ where });
+  async del(criteria: FindOptionsWhere<Project>): Promise<DeleteResult> {
+    return await this.repo.delete(criteria);
   }
 }
