@@ -17,6 +17,7 @@ import {
 import { CreateProjectDto, UpdateProjectDto } from './dto/project.dto';
 import { Project } from './entity/project.entity';
 import { DeleteResult } from 'typeorm';
+import { Employee } from 'src/employee/entity/employee.entity';
 
 @ApiTags('projects')
 @Controller('project')
@@ -30,7 +31,9 @@ export class ProjectController {
     projectEnt.comercialDesignation = project.comercialDesignation;
     projectEnt.name = project.name;
     projectEnt.status = project.status;
-    projectEnt.leader.id = project.leader;
+
+    projectEnt.leader = new Employee();
+    projectEnt.leader.id = project.leaderId;
 
     return await this.projectService.create({ ...projectEnt });
   }

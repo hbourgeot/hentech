@@ -1,17 +1,29 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+
 // Create
 export class CreateProjectDto {
-  id: number = 0;
+  @ApiProperty()
   name: string;
+
+  @ApiProperty()
   comercialDesignation: string;
+
+  @ApiProperty()
   status: string;
-  leader: number;
+
+  @ApiProperty()
+  leaderId: number;
 }
 
 // Update
 export class UpdateProjectDto {
+  @ApiPropertyOptional()
   name?: string;
+  @ApiPropertyOptional()
   comercialDesignation?: string;
+  @ApiPropertyOptional()
   status?: string;
+  @ApiPropertyOptional()
   leader?: {
     id: number;
   };
