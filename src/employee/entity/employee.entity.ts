@@ -39,7 +39,7 @@ export class Employee {
   @OneToMany(() => Project, (project) => project.leader)
   ledProjects?: Project[];
 
-  @ApiPropertyOptional({ type: EmployeeProject, isArray: true })
+  @ApiPropertyOptional({ type: () => Project, isArray: true })
   @ManyToMany(() => Project)
   @JoinTable({
     name: 'employee_project', // corresponds to EmployeeProject model
