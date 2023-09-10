@@ -6,6 +6,7 @@ import { VersionModule } from './version/version.module';
 import { DocumentModule } from './document/document.module';
 import { TaskModule } from './task/task.module';
 import { ProjectModule } from './project/project.module';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ProjectModule } from './project/project.module';
     DocumentModule,
     VersionModule,
     AuthModule,
+    DatabaseModule,
   ],
   controllers: [],
   providers: [PrismaService],
