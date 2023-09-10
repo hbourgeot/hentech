@@ -36,7 +36,7 @@ export class Project {
 
   @ApiPropertyOptional({ type: Task, isArray: true })
   @OneToMany(() => Task, (task) => task.project)
-  tasks: Task[];
+  tasks?: Task[];
 
   @ApiProperty({ type: () => Employee, isArray: true })
   @ManyToMany(() => Employee)
