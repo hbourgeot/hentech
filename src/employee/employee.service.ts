@@ -37,7 +37,7 @@ export class EmployeeService {
     return this.prisma.employee.update({ data, where });
   }
 
-  async del(where: Prisma.EmployeeWhereUniqueInput): Promise<Employee> {
-    return this.prisma.employee.delete({ where });
+  async del(id: number): Promise<Employee> {
+    return this.prisma.employee.delete({ where: { id: id } });
   }
 }
