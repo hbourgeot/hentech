@@ -1,43 +1,45 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { Prisma, Document } from '@prisma/client';
+import { Inject, Injectable } from '@nestjs/common';
+import {
+  DeleteResult,
+  FindOptionsOrder,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
+import { Document } from './entity/document.entity';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 @Injectable()
 export class DocumentService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @Inject('DOCUMENT_REPOSITORY') private repo: Repository<Document>,
+  ) {}
 
   async getOne(document: number): Promise<Document | null> {
-    return this.prisma.document.findUnique({ where: { id: document } });
+    return this.repo.findOne({ where: { id: document } });
   }
 
   async getAll(
     skip?: number,
     take?: number,
-    cursor?: Prisma.DocumentWhereUniqueInput,
-    where?: Prisma.DocumentWhereInput,
-    orderBy?: Prisma.DocumentOrderByWithRelationInput,
+    where?: FindOptionsWhere<Document>,
+    order?: FindOptionsOrder<Document>,
   ): Promise<Document[]> {
-    return this.prisma.document.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-    });
+    return await this.repo.find({ skip, take, where, order });
   }
 
-  async create(data: Prisma.DocumentCreateInput): Promise<Document> {
-    return this.prisma.document.create({ data });
+  async create(data: Document): Promise<Document> {
+    return await this.repo.save(data);
   }
 
   async update(
-    where: Prisma.DocumentWhereUniqueInput,
-    data: Prisma.DocumentUpdateInput,
+    where: FindOptionsWhere<Document>,
+    data: QueryDeepPartialEntity<Document>,
   ): Promise<Document> {
-    return this.prisma.document.update({ data, where });
+    await this.repo.update(where, data);
+    return await this.repo.findOneByOrFail(where);
   }
 
-  async del(where: Prisma.DocumentWhereUniqueInput): Promise<Document> {
-    return this.prisma.document.delete({ where });
+  async del(criteria: FindOptionsWhere<Document>): Promise<DeleteResult> {
+    return await this.repo.delete(criteria);
   }
 }

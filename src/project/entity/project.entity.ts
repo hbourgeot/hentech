@@ -1,5 +1,5 @@
+import { EmployeeProject } from 'src/employee-project/employeeProject.entity';
 import { Employee } from 'src/employee/entity/employee.entity';
-import { EmployeeProject } from 'src/employeeProject.entity';
 import { Task } from 'src/task/entity/task.entity';
 import {
   Column,

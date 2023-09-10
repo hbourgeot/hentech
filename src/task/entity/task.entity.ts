@@ -22,10 +22,10 @@ export class Task {
   @Column({ length: 50 })
   actualDuration: string;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp with time zone' })
   estimatedDate: Date;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp with time zone' })
   actualDate: Date;
 
   @Column({ length: 50 })

@@ -6,7 +6,7 @@ export class Version {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp with time zone' })
   date: Date;
 
   @Column({ length: 200 })

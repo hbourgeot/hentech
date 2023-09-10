@@ -1,43 +1,45 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { Prisma, Employee } from '@prisma/client';
+import { Inject, Injectable } from '@nestjs/common';
+import { Employee } from './entity/employee.entity';
+import {
+  DeleteResult,
+  FindOptionsOrder,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 @Injectable()
 export class EmployeeService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @Inject('EMPLOYEE_REPOSITORY') private repo: Repository<Employee>,
+  ) {}
 
   async getOne(id: number): Promise<Employee | null> {
-    return this.prisma.employee.findUnique({ where: { id: id } });
+    return await this.repo.findOneBy({ id: id });
   }
 
   async getAll(
     skip?: number,
     take?: number,
-    cursor?: Prisma.EmployeeWhereUniqueInput,
-    where?: Prisma.EmployeeWhereInput,
-    orderBy?: Prisma.EmployeeOrderByWithRelationInput,
+    where?: FindOptionsWhere<Employee>,
+    order?: FindOptionsOrder<Employee>,
   ): Promise<Employee[]> {
-    return this.prisma.employee.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-    });
+    return await this.repo.find({ skip, take, where, order });
   }
 
-  async create(data: Prisma.EmployeeCreateInput): Promise<Employee> {
-    return this.prisma.employee.create({ data });
+  async create(data: Employee): Promise<Employee> {
+    return await this.repo.save(data);
   }
 
   async update(
-    where: Prisma.EmployeeWhereUniqueInput,
-    data: Prisma.EmployeeUpdateInput,
+    where: FindOptionsWhere<Employee>,
+    data: QueryDeepPartialEntity<Employee>,
   ): Promise<Employee> {
-    return this.prisma.employee.update({ data, where });
+    await this.repo.update(where, data);
+    return await this.repo.findOneByOrFail(where);
   }
 
-  async del(id: number): Promise<Employee> {
-    return this.prisma.employee.delete({ where: { id: id } });
+  async del(criteria: FindOptionsWhere<Employee>): Promise<DeleteResult> {
+    return await this.repo.delete(criteria);
   }
 }

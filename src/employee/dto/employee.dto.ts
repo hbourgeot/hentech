@@ -38,23 +38,3 @@ export class UpdateEmployeeDto {
   @ApiPropertyOptional()
   phoneNumber?: string;
 }
-
-export class GetEmployeeDTO {
-  @ApiProperty()
-  id: number;
-
-  @ApiProperty()
-  name: string;
-
-  @ApiProperty()
-  lastName: string;
-
-  @ApiProperty()
-  address: string;
-
-  @ApiProperty()
-  email: string;
-
-  @ApiProperty()
-  phoneNumber: string;
-}
