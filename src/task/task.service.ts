@@ -13,7 +13,10 @@ export class TaskService {
   constructor(@Inject('TASK_REPOSITORY') private repo: Repository<Task>) {}
 
   async getOne(document: number): Promise<Task | null> {
-    return this.repo.findOne({ where: { id: document } });
+    return this.repo.findOne({
+      where: { id: document },
+      relations: { documents: true, project: true },
+    });
   }
 
   async getAll(
@@ -22,7 +25,13 @@ export class TaskService {
     where?: FindOptionsWhere<Task>,
     order?: FindOptionsOrder<Task>,
   ): Promise<Task[]> {
-    return await this.repo.find({ skip, take, where, order });
+    return await this.repo.find({
+      skip,
+      take,
+      where,
+      order,
+      relations: { documents: true, project: true },
+    });
   }
 
   async create(data: Task): Promise<Task> {
