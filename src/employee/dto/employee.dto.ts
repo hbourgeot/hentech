@@ -1,23 +1,41 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-
+import { IsEmail, IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator"
 // Create
 export class CreateEmployeeDto {
   @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
   id: number;
 
   @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(50)
   name: string;
 
   @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(50)
   lastName: string;
 
   @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(200)
   address: string;
 
   @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  @IsEmail()
+  @MaxLength(50)
   email: string;
 
   @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(50)
   phoneNumber: string;
 }
 

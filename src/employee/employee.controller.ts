@@ -33,10 +33,8 @@ export class EmployeeController {
   @ApiBadRequestResponse({ type: undefined, description: 'Bad Request' })
   @ApiNotFoundResponse({ type: undefined, description: 'Employee Not Found' })
   @Get(':id')
-  async getEmployee(
-    @Param('id') id: string | number,
-  ): Promise<Employee | null> {
-    id = Number(+id);
+  async getEmployee(@Param('id') stringId: string): Promise<Employee | null> {
+    const id = Number(+stringId);
     return await this.employeeService.getOne(id);
   }
 
@@ -49,18 +47,21 @@ export class EmployeeController {
   @ApiOkResponse({ type: Employee })
   @Patch(':id')
   async updateEmployee(
-    @Param('id') id: string | number,
+    @Param('id') stringId: string,
     @Body() updatedEmployee: UpdateEmployeeDto,
   ): Promise<Employee> {
-    id = Number(+id);
+    const id = Number(+stringId);
     const employee = (await this.employeeService.getOne(id)) as Employee;
-    return await this.employeeService.update(employee, { ...updatedEmployee });
+    return await this.employeeService.update(
+      { ...employee },
+      { ...updatedEmployee },
+    );
   }
 
   @ApiOkResponse({ type: Employee })
   @Delete(':id')
-  async deleteEmployee(@Param() id: string | number): Promise<DeleteResult> {
-    id = Number(+id);
+  async deleteEmployee(@Param('id') stringId: string): Promise<DeleteResult> {
+    const id = Number(+stringId);
     return await this.employeeService.del({ id });
   }
 }
