@@ -29,7 +29,7 @@ export class Project {
   leader: Employee;
 
   @OneToMany(() => Task, (task) => task.project)
-  tasks: Task[];
+  tasks?: Task[];
 
   @ManyToMany(() => Employee)
   @JoinTable({
@@ -37,5 +37,5 @@ export class Project {
     joinColumn: { name: 'projectId', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'employeeId', referencedColumnName: 'id' },
   })
-  employeeProjects: EmployeeProject[];
+  employeeProjects?: EmployeeProject[];
 }
