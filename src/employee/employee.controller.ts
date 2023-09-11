@@ -74,7 +74,7 @@ export class EmployeeController {
 
   @Get(':id/projects')
   async getEmployeeInProjects(@Param('id') id: string) {
-    return await this.employeeProjectService.getAll(0, 100, { employeeId: Number(+id) }, {project: {leader: true}, employee: false}, {project:{id:true,comercialDesignation:true,name:true,status:true,tasks: true,leader:{address:true,email:true,id:true,lastName:true,name:true,phoneNumber:true,password:false}}});
+    return await this.employeeProjectService.getAll(0, 100, { employeeId: Number(+id) }, {project: {leader: true, tasks: true}, employee: false}, {project:{id:true,comercialDesignation:true,name:true,status:true,tasks: true,leader:{address:true,email:true,id:true,lastName:true,name:true,phoneNumber:true,password:false}}});
   }
 
   @Post('addToProject')
