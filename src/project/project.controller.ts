@@ -18,11 +18,15 @@ import { CreateProjectDto, UpdateProjectDto } from './dto/project.dto';
 import { Project } from './entity/project.entity';
 import { DeleteResult } from 'typeorm';
 import { Employee } from 'src/employee/entity/employee.entity';
+import { EmployeeProjectService } from 'src/employee-project/employeeProject.service';
 
 @ApiTags('projects')
 @Controller('project')
 export class ProjectController {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(
+    private readonly projectService: ProjectService,
+    private readonly employeeProjectService: EmployeeProjectService,
+  ) {}
 
   @ApiOkResponse({ type: Project })
   @Post()
@@ -72,5 +76,26 @@ export class ProjectController {
   async deleteEmployee(@Param('id') stringId: string): Promise<DeleteResult> {
     const id = Number(+stringId);
     return await this.projectService.del({ id });
+  }
+
+  @Get(':id/employees')
+  async getProjectEmployees(@Param('id') id: string) {
+    return await this.employeeProjectService.getAll(
+      0,
+      50,
+      { projectId: Number(+id) },
+      { employee: true, project: false },
+      {
+        employee: {
+          password: false,
+          address: true,
+          email: true,
+          id: true,
+          lastName: true,
+          name: true,
+          phoneNumber: true,
+        },
+      },
+    );
   }
 }

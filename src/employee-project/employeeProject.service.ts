@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import {
   DeleteResult,
   FindOptionsOrder,
+  FindOptionsRelations,
+  FindOptionsSelect,
   FindOptionsWhere,
   Repository,
 } from 'typeorm';
@@ -20,9 +22,18 @@ export class EmployeeProjectService {
     skip?: number,
     take?: number,
     where?: FindOptionsWhere<EmployeeProject>,
+    relations?: FindOptionsRelations<EmployeeProject>,
+    select?: FindOptionsSelect<EmployeeProject>,
     order?: FindOptionsOrder<EmployeeProject>,
   ): Promise<EmployeeProject[]> {
-    return await this.repo.find({ skip, take, where, order });
+    return await this.repo.find({
+      select,
+      skip,
+      take,
+      where,
+      order,
+      relations,
+    });
   }
 
   async create(data: EmployeeProject): Promise<EmployeeProject> {

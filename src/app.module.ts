@@ -9,6 +9,7 @@ import { TaskModule } from './task/task.module';
 import { VersionModule } from './version/version.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ expandVariables: true, isGlobal: true }),
