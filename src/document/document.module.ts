@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { DocumentService } from './document.service';
 import { DocumentController } from './document.controller';
-import { documentProviders } from './document.providers';
-import { DatabaseModule } from 'src/database/database.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Document } from './entity/document.entity';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [TypeOrmModule.forFeature([Document])],
   controllers: [DocumentController],
-  providers: [DocumentService, ...documentProviders],
+  providers: [DocumentService],
 })
 export class DocumentModule {}

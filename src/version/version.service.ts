@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   DeleteResult,
   FindOptionsOrder,
@@ -7,11 +7,12 @@ import {
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { Version } from './entity/version.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class VersionService {
   constructor(
-    @Inject('VERSION_REPOSITORY') private repo: Repository<Version>,
+    @InjectRepository(Version) private repo: Repository<Version>,
   ) {}
 
   async getOne(version: number): Promise<Version | null> {

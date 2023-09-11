@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   DeleteResult,
   FindOptionsOrder,
@@ -7,11 +7,12 @@ import {
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { EmployeeProject } from './employeeProject.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class EmployeeProjectService {
   constructor(
-    @Inject('EMPLOYEE_PROJECT_REPOSITORY')
+    @InjectRepository(EmployeeProject)
     private repo: Repository<EmployeeProject>,
   ) {}
 
