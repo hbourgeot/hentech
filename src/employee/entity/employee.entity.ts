@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { EmployeeProject } from 'src/employee-project/employeeProject.entity';
 import { Project } from 'src/project/entity/project.entity';
 import {
+  BeforeInsert,
   Column,
   Entity,
   JoinTable,
@@ -9,6 +10,7 @@ import {
   OneToMany,
   PrimaryColumn,
 } from 'typeorm';
+
 @Entity()
 export class Employee {
   @ApiProperty()
@@ -30,6 +32,10 @@ export class Employee {
   @ApiProperty()
   @Column({ length: 100, unique: true })
   email: string;
+
+  @ApiProperty()
+  @Column({ length: 256 })
+  password: string;
 
   @ApiProperty()
   @Column({ length: 50 })

@@ -17,6 +17,7 @@ import {
 import { CreateEmployeeDto, UpdateEmployeeDto } from './dto/employee.dto';
 import { Employee } from './entity/employee.entity';
 import { DeleteResult } from 'typeorm';
+import * as bcrypt from 'bcrypt'
 
 @ApiTags('employee')
 @Controller('employee')
@@ -26,6 +27,8 @@ export class EmployeeController {
   @ApiOkResponse({ type: Employee })
   @Post()
   async createEmployee(@Body() employee: CreateEmployeeDto): Promise<Employee> {
+    const password = await bcrypt.hash(employee.password, 10);
+    employee.password = password;
     return await this.employeeService.create({ ...employee });
   }
 
