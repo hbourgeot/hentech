@@ -11,7 +11,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 @Module({
   imports: [
-    ConfigModule.forRoot({ expandVariables: true }),
+    ConfigModule.forRoot({ expandVariables: true, isGlobal: true }),
     EmployeeModule,
     ProjectModule,
     TaskModule,

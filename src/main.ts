@@ -1,15 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
+  const startTime = process.hrtime();
   const app = await NestFactory.create(AppModule);
+  const logger = new Logger();
 
   const config = new DocumentBuilder()
     .setTitle('HenTech API')
     .setDescription('HenTech API for project organization')
     .setVersion('1.0')
+    .addTag('auth', 'Auth API')
     .addTag('employee', 'Employee API')
     .addTag('projects', 'Projects API')
     .addTag('tasks', 'Tasks API')
@@ -21,6 +24,12 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   SwaggerModule.setup('api', app, document);
 
+
   await app.listen(3000);
+
+  const endTime = process.hrtime(startTime);
+  const started = (endTime[0] * 1000 + endTime[1] / 1e6).toFixed(2);
+  
+  logger.log(`Application started successfully in ${started}ms`)
 }
 bootstrap();

@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
+  IsStrongPassword,
   MaxLength,
 } from 'class-validator';
 // Create
@@ -37,6 +38,12 @@ export class CreateEmployeeDto {
   @IsEmail()
   @MaxLength(50)
   email: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(30)
+  password: string;
 
   @ApiProperty()
   @IsNotEmpty()

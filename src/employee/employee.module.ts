@@ -13,5 +13,6 @@ import { Employee } from './entity/employee.entity';
     EmployeeService,
     EmployeeProjectService,
   ],
+  exports: [TypeOrmModule]
 })
 export class EmployeeModule {}
