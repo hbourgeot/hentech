@@ -1,11 +1,21 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 // Create
 export class CreateTaskDto {
+  id?: number = 0;
+  @ApiProperty()
   description: string;
+  @ApiProperty()
   estimatedDuration: string;
+  @ApiProperty()
   actualDuration: string;
+  @ApiProperty()
   estimatedDate: Date;
+  @ApiProperty()
   actualDate: Date;
+  @ApiProperty()
   type: string;
+  @ApiProperty()
   projectId: number;
 }
 
