@@ -33,9 +33,9 @@ export class Document {
 
   @ApiProperty({ type: () => Task })
   @ManyToOne(() => Task, (task) => task.documents)
-  task: Task;
+  task?: Task;
 
   @ApiProperty({ type: () => Version, isArray: true })
   @OneToMany(() => Version, (version) => version.document)
-  versions: Version[];
+  versions?: Version[];
 }
