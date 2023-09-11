@@ -22,5 +22,5 @@ export class Version {
 
   @ApiProperty({ type: () => Document })
   @ManyToOne(() => Document, (document) => document.versions)
-  document: Document;
+  document?: Document;
 }
