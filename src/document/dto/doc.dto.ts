@@ -1,10 +1,10 @@
 // Create
 export class CreateDocumentDto {
-  specificationDocument: string;
-  sourceCode: string;
-  description: string;
-  type: string;
-  taskId: number;
+  readonly specificationDocument: string;
+  readonly sourceCode: string;
+  readonly description: string;
+  readonly type: string;
+  readonly taskId: number;
 }
 
 // Update

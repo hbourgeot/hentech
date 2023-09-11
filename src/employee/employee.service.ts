@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Employee } from './entity/employee.entity';
 import {
   DeleteResult,
@@ -7,11 +7,12 @@ import {
   Repository,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class EmployeeService {
   constructor(
-    @Inject('EMPLOYEE_REPOSITORY') private repo: Repository<Employee>,
+    @InjectRepository(Employee) private repo: Repository<Employee>,
   ) {}
 
   async getOne(id: number): Promise<Employee | null> {

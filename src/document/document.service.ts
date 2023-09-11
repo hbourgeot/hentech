@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   DeleteResult,
   FindOptionsOrder,
@@ -7,11 +7,12 @@ import {
 } from 'typeorm';
 import { Document } from './entity/document.entity';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class DocumentService {
   constructor(
-    @Inject('DOCUMENT_REPOSITORY') private repo: Repository<Document>,
+    @InjectRepository(Document) private repo: Repository<Document>,
   ) {}
 
   async getOne(document: number): Promise<Document | null> {

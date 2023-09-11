@@ -7,11 +7,12 @@ import {
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { Project } from './entity/project.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class ProjectService {
   constructor(
-    @Inject('PROJECT_REPOSITORY') private repo: Repository<Project>,
+    @InjectRepository(Project) private repo: Repository<Project>,
   ) {}
 
   async getOne(project: number): Promise<Project | null> {
