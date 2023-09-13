@@ -12,15 +12,17 @@
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import { storePopup } from '@skeletonlabs/skeleton';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
+
+	import titleImg from "$lib/assets/title/base-DefaultLogo-100px.png"
 </script>
 
 <!-- App Shell -->
 <AppShell>
 	<svelte:fragment slot="header">
 		<!-- App Bar -->
-		<AppBar>
+		<AppBar gridColumns="grid-cols-3" slotDefault="place-self-center" slotTrail="place-content-end">
 			<svelte:fragment slot="lead">
-				<strong class="text-xl uppercase">HenTech</strong>
+				<a href="/"><img src="{titleImg}" alt="HenTech Logo" class="w-1/3"></a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<a
