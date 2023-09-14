@@ -40,6 +40,7 @@
   "type": "module",
   "dependencies": {
     "@floating-ui/dom": "1.5.2",
-    "highlight.js": "11.8.0"
+    "highlight.js": "11.8.0",
+    "jwt-decode": "^3.1.2"
   }
 }

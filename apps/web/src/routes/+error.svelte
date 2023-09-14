@@ -1,11 +1,6 @@
 <script>
+	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-
-	/*
-  Inspired by: "Error, 404"
-  By: Sujeet Mishra
-  Link: https://dribbble.com/shots/4571035-Error-404
-*/
 
 	onMount(() => {
 		let oh = document.querySelector('.circle.oh');
@@ -23,12 +18,13 @@
 					((event.clientY - domainY[0]) * (range[1] - range[0])) / (domainY[1] - domainY[0])
 			};
 
-			oh.style.animation = 'none';
-			oh.style.transform = `translate(${translate.x}px, ${translate.y}px)`;
+      oh?.classList.add('mousein')
+      oh.style.transform = `translate(${translate.x}px, ${translate.y}px)`;
 		});
 
 		document.addEventListener('mouseleave', (event) => {
-			oh.style.animation = 'floating 3s linear infinite';
+			oh?.classList.remove('mousein')
+      oh.style.transform = ''
 		});
 	});
 </script>
@@ -41,8 +37,8 @@
 <div class="center">
 	<div class="circle circle--outer" />
 	<div class="circle circle--inner">
-		<div class="four four--1">4</div>
-		<div class="four four--2">4</div>
+		<div class="four four--1">{$page.status.toString()[0]}</div>
+		<div class="four four--2">{$page.status.toString()[2]}</div>
 		<div class="circle oh">
 			<div class="astronaut">
 				<div class="astronaut-backpack" />
@@ -140,9 +136,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="button">GO HOME</div>
+		<a href="/" class="button">GO HOME</a>
 	</div>
-	<div class="sorry">Oops! Sorry, page not found.</div>
+	<div class="sorry">Oops! Sorry, {$page.error?.message}.</div>
 </div>
 
 <style lang="scss">
@@ -173,26 +169,30 @@
 			transform: scale(1);
 			opacity: 1;
 		}
+    50% {
+      transform: scale(0.4);
+      opacity: 0.5;
+    }
 	}
 
 	// Keyframes para floating
 	@keyframes floating {
 		0%,
 		100% {
-			transform: translate(1px, -3px) rotate(1deg);
+			transform: translate(#{randomNum(-3, 3)}px, #{randomNum(-3, 3)}px) rotate(#{randomNum(-2, 2)}deg);
 		}
 
 		20% {
-			transform: translate(randomNum(-3, 3) px, randomNum(-3, 3) px) rotate(randomNum(-2, 2) deg);
+			transform: translate(#{randomNum(-3, 3)}px, #{randomNum(-3, 3)}px) rotate(#{randomNum(-2, 2)}deg);
 		}
 		40% {
-			transform: translate(randomNum(-3, 3) px, randomNum(-3, 3) px) rotate(randomNum(-2, 2) deg);
+			transform: translate(#{randomNum(-3, 3)}px, #{randomNum(-3, 3)}px) rotate(#{randomNum(-2, 2)}deg);
 		}
 		60% {
-			transform: translate(randomNum(-3, 3) px, randomNum(-3, 3) px) rotate(randomNum(-2, 2) deg);
+			transform: translate(#{randomNum(-3, 3)}px, #{randomNum(-3, 3)}px) rotate(#{randomNum(-2, 2)}deg);
 		}
 		80% {
-			transform: translate(randomNum(-3, 3) px, randomNum(-3, 3) px) rotate(randomNum(-2, 2) deg);
+			transform: translate(#{randomNum(-3, 3)}px, #{randomNum(-3, 3)}px) rotate(#{randomNum(-2, 2)}deg);
 		}
 	}
 
@@ -315,12 +315,12 @@
 		user-select: none;
 	}
 	.four--1 {
-		top: 100px;
+		top: 45%;
 		left: 30px;
 		z-index: 1;
 	}
 	.four--2 {
-		top: 100px;
+		top: 45%;
 		left: 230px;
 		z-index: 3;
 	}
@@ -463,10 +463,14 @@
 		}
 	}
 	.oh {
-		transition: all 0.1s linear !important;
-		animation: floating 4s linear infinite !important;
+		transition: all 0.1s linear;
+		animation: floating 4s linear infinite;
 		z-index: 2;
 	}
+  .mousein{
+    animation: none;
+  }
+			
 	.planet {
 		background-color: #ff4980;
 		box-shadow: inset -6px -10px 0px 1px #cc3b6b, 0px 2px 10px rgba(0, 0, 0, 0.4);
