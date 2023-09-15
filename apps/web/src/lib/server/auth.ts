@@ -1,30 +1,10 @@
 import { typeChecker } from "$lib/typeChecker";
 import type { RequestEvent } from "@sveltejs/kit";
-import type { AuthorizationToken, tokenPayload } from "../../app";
+import type { AuthorizationToken, Employee, tokenPayload } from "../../app";
 import jwt_decode from "jwt-decode"
-
+let i = 0;
 export const getAccessToken = async (event: RequestEvent) => {
   const { cookies } = event;
-
-  const token_payload: tokenPayload = typeChecker(
-    "string",
-    cookies.get("token_payload"),
-    JSON.parse
-  );
-  const refresh_token = cookies.get("refresh_token");
-
-  //If accessToken is expired (they expire every 5 mins)
-  if (token_payload && token_payload.exp * 1000 < Date.now()) {
-    //then get a new access toke with the refresh token
-    if (refresh_token) {
-      let token: string = (await refreshToken(
-        refresh_token
-      )) as unknown as string;
-      if (token) {
-        setAuthCookies({ cookies, access_token: token });
-      }
-    }
-  }
 
   const access_token = cookies.get("access_token");
 
@@ -38,7 +18,6 @@ export const client = async (
 	raw?: object,
 	headers?: any,
 ) => {
-	const access_token = await getAccessToken(event);
 
 	const { fetch } = event;
 
@@ -66,23 +45,6 @@ export const client = async (
 			status: res.status,
 			data: JSON.stringify(data)
 		};
-	}
-};
-
-export const refreshToken = async (refresh_token: string) => {
-	try {
-		// console.log(refresh_token)
-		const res: Response = await fetch(`/api/auth/refresh`, {
-			method: 'POST',
-			body: refresh_token
-		});
-		// console.log(res)
-		const { access_token }: AuthorizationToken = await res.json();
-
-		// console.log("accestoken",access_token)
-		return access_token;
-	} catch (error) {
-		console.error(error);
 	}
 };
 
@@ -117,14 +79,12 @@ export const logIn = async (
 	{ email, password }: { email?: string; password?: string }
 ) => {
 	const { ok, status, data } = await client.POST('/auth/login', { email: email, password: password });
-	// console.log(data)
-	let location: string;
 
 	if (ok) {
 
-		const { access_token, refresh_token }: AuthorizationToken = data;
+		const { access_token } = data;
 
-		setAuthCookies({ cookies, access_token, refresh_token });
+		setAuthCookies({ cookies, access_token });
 
 		return { ok };
 	}
@@ -139,5 +99,24 @@ export const logOut = async ({ cookies, locals }: RequestEvent) => {
 	cookies.delete('SESSION_DATA', { path: '/' });
 	cookies.delete('CONFIRMATION_USER', { path: '/' });
 	//@ts-ignore
-	locals.user = null;
+	locals.employee = null;
+};
+
+export const getUser = async (event: RequestEvent,token: string) => {
+	try {
+		let headers = {
+			Accept: '*/*',
+			Authorization: token
+		};
+
+		const { url } = event;
+
+
+		const res: Response = await fetch(`http://${url.host}/api/auth/profile`, { method: 'GET', headers });
+		const {employee}: {employee: Employee } = await res.json();
+
+		return employee;
+	} catch (error) {
+		console.error(error);
+	}
 };

@@ -16,23 +16,26 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateEmployeeDto, UpdateEmployeeDto } from './dto/employee.dto';
-import { Employee } from './entity/employee.entity';
+import { Employee, Role } from './entity/employee.entity';
 import { DeleteResult } from 'typeorm';
 import * as bcrypt from 'bcrypt'
 import { EmployeeProjectService } from 'src/employee-project/employeeProject.service';
 import { EmployeeProject } from 'src/employee-project/employeeProject.entity';
 import { Project } from 'src/project/entity/project.entity';
+import { RoleService } from './role.service';
 
 @ApiTags('employee')
 @Controller('employee')
 export class EmployeeController {
-  constructor(private readonly employeeService: EmployeeService, private readonly employeeProjectService: EmployeeProjectService) {}
+  constructor(private readonly employeeService: EmployeeService, private readonly employeeProjectService: EmployeeProjectService, private readonly roleService: RoleService) {}
 
   @ApiOkResponse({ type: Employee })
   @Post()
   async createEmployee(@Body() employee: CreateEmployeeDto): Promise<Employee> {
     const password = await bcrypt.hash(employee.password, 10);
     employee.password = password;
+    employee.role = new Role();
+    employee.role.id = employee.roleId;
     return await this.employeeService.create({ ...employee });
   }
 
@@ -59,6 +62,11 @@ export class EmployeeController {
   ): Promise<Employee> {
     const id = Number(+stringId);
     const employee = (await this.employeeService.getOne(id)) as Employee;
+
+    updatedEmployee.role = new Role;
+    updatedEmployee.role.id = updatedEmployee.roleId ?? employee.role.id
+
+    delete updatedEmployee.roleId
     return await this.employeeService.update(
       { ...employee },
       { ...updatedEmployee },
@@ -70,6 +78,11 @@ export class EmployeeController {
   async deleteEmployee(@Param('id') stringId: string): Promise<DeleteResult> {
     const id = Number(+stringId);
     return await this.employeeService.del({ id });
+  }
+
+  @Post('createRole')
+  async createRole(@Query('role') role: string) {
+    return await this.roleService.create({id: 0, role})
   }
 
   @Get(':id/projects')

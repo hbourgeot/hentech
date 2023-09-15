@@ -10,7 +10,7 @@ export class AuthService {
   constructor(@InjectRepository(Employee) private repo: Repository<Employee>, private jwtService: JwtService) { }
   
   async signIn(email: string, pass: string): Promise<any> {
-    const user = await this.repo.findOne({ where: { email: email } });
+    const user = await this.repo.findOne({ where: { email: email }, relations: {role: true} });
     if (!user) {
       throw new NotFoundException();
     }
@@ -19,9 +19,11 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const payload = {sub: user.id, email: user.email}
+    const payload = {sub: user.id, employee: user}
     return {
-      access_token: await this.jwtService.signAsync(payload)
+      access_token: await this.jwtService.signAsync(payload, {expiresIn: "30m"}),
+      ok: true,
+      status: 200,
     };
   }
 }

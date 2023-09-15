@@ -4,15 +4,15 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 export class CreateDocumentDto {
   id: number = 0;
   @ApiProperty()
-  specificationDocument: string;
+  specificationDocument!: string;
   @ApiProperty()
-  sourceCode: string;
+  sourceCode!: string;
   @ApiProperty()
-  description: string;
+  description!: string;
   @ApiProperty()
-  type: string;
+  type!: string;
   @ApiProperty()
-  taskId: number;
+  taskId!: number;
 }
 
 // Update

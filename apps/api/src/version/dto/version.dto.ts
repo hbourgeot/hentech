@@ -4,13 +4,13 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 export class CreateVersionDto {
   id: number = 0;
   @ApiProperty()
-  date: Date;
+  date!: Date;
   @ApiProperty()
-  description: string;
+  description!: string;
   @ApiProperty()
-  tag: string;
+  tag!: string;
   @ApiProperty()
-  documentId: number;
+  documentId!: number;
 }
 
 // Update

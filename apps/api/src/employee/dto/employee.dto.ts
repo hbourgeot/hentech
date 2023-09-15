@@ -1,55 +1,63 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsEmail,
   IsNotEmpty,
   IsNumber,
   IsString,
-  IsStrongPassword,
   MaxLength,
 } from 'class-validator';
+import { Role } from '../entity/employee.entity';
 // Create
 export class CreateEmployeeDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
-  id: number;
+  id!: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  roleId!: number;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
   @MaxLength(50)
-  name: string;
+  name!: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
   @MaxLength(50)
-  lastName: string;
+  lastName!: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
   @MaxLength(200)
-  address: string;
+  address!: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
   @IsEmail()
   @MaxLength(50)
-  email: string;
+  email!: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
   @MaxLength(30)
-  password: string;
+  password!: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
   @MaxLength(50)
-  phoneNumber: string;
+  phoneNumber!: string;
+
+  @ApiHideProperty()
+  role!: Role
 }
 
 // Update
@@ -68,4 +76,10 @@ export class UpdateEmployeeDto {
 
   @ApiPropertyOptional()
   phoneNumber?: string;
+
+  @ApiPropertyOptional()
+  roleId?: number;
+
+  @ApiHideProperty()
+  role!: Role
 }

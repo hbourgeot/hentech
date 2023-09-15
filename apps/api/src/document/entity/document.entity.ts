@@ -13,23 +13,23 @@ import { ApiProperty } from '@nestjs/swagger';
 export class Document {
   @ApiProperty()
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @ApiProperty()
   @Column({ length: 200 })
-  specificationDocument: string;
+  specificationDocument!: string;
 
   @ApiProperty()
   @Column({ length: 200 })
-  sourceCode: string;
+  sourceCode!: string;
 
   @ApiProperty()
   @Column({ length: 200 })
-  description: string;
+  description!: string;
 
   @ApiProperty()
   @Column({ length: 50 })
-  type: string;
+  type!: string;
 
   @ApiProperty({ type: () => Task })
   @ManyToOne(() => Task, (task) => task.documents)
