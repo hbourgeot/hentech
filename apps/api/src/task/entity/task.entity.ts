@@ -13,37 +13,37 @@ import {
 export class Task {
   @ApiProperty()
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @ApiProperty()
   @Column({ length: 200 })
-  description: string;
+  description!: string;
 
   @ApiProperty()
   @Column({ length: 50 })
-  estimatedDuration: string;
+  estimatedDuration!: string;
 
   @ApiProperty()
   @Column({ length: 50 })
-  actualDuration: string;
+  actualDuration!: string;
 
   @ApiProperty()
   @Column({ type: 'timestamp with time zone' })
-  estimatedDate: Date;
+  estimatedDate!: Date;
 
   @ApiProperty()
   @Column({ type: 'timestamp with time zone' })
-  actualDate: Date;
+  actualDate!: Date;
 
   @ApiProperty()
   @Column({ length: 50 })
-  type: string;
+  type!: string;
 
   @ApiProperty({ type: () => Project })
   @ManyToOne(() => Project, (project) => project.tasks)
-  project: Project;
+  project!: Project;
 
   @ApiProperty({ type: () => Document, isArray: true })
   @OneToMany(() => Document, (document) => document.task)
-  documents: Document[];
+  documents!: Document[];
 }

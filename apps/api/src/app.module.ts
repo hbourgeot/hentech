@@ -31,7 +31,7 @@ import { AppController } from './app.controller';
         password: configService.get("DBPASS"),
         database: configService.get("DBNAME"),
         entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-        synchronize: false,
+        synchronize: true,
       }),
       inject: [ConfigService]
     })
