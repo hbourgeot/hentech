@@ -128,7 +128,7 @@
 			</nav>
 		</div>
 	</section>
-	<div class="p-5">
+	<div class="p-5 bg-gray-200 w-full dark:bg-[#171c28]">
 		<slot />
 	</div>
 </main>
