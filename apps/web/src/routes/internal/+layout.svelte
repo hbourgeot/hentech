@@ -1,9 +1,60 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import Icon from '@iconify/svelte';
-	import { AppRail, AppRailAnchor, AppRailTile, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
+	import {
+		AppRail,
+		AppRailAnchor,
+		AppRailTile,
+		ListBox,
+		ListBoxItem
+	} from '@skeletonlabs/skeleton';
 
 	let currentTile: number = 0;
-	let valueSingle = "resumeP"
+	let valueSingle = 'resumeP';
+
+	let allLinks: { base: string; children: { name: string; href: string }[] }[] = [
+		{
+			base: '/projects',
+			children: [
+				{ name: 'Projects Resume', href: '' },
+				{ name: 'Create project', href: '/create' },
+				{ name: 'Search projects', href: '/search' }
+			]
+		},
+		{
+			base: '/employees',
+			children: [
+				{ name: 'Employees Resume', href: '' },
+				{ name: 'Register Employee', href: '/register' },
+				{ name: 'Search Employees', href: '/search' }
+			]
+		},
+		{
+			base: '/tasks',
+			children: [
+				{ name: 'Tasks Resume', href: '' },
+				{ name: 'Add Task', href: '/add' },
+				{ name: 'Search Tasks', href: '/search' }
+			]
+		},
+		{
+			base: '/user/projects',
+			children: [
+				{ name: 'Projects resume', href: '' },
+				{ name: 'Search projects', href: '/search' }
+			]
+		},
+		{
+			base: '/user/tasks',
+			children: [
+				{ name: 'Tasks resume', href: '' },
+				{ name: 'Search tasks', href: '/search' }
+			]
+		}
+	];
+
+	let links: { base: string; children: { name: string; href: string }[] };
+	$: links = allLinks[currentTile];
 </script>
 
 <main class="flex">
@@ -46,7 +97,15 @@
 			</AppRailTile>
 			<!-- --- -->
 			<svelte:fragment slot="trail">
-				<AppRailAnchor class="cursor-pointer" href="/internal/profile" target="_blank" title="Account" bind:group={currentTile} value={5} name="account">
+				<AppRailAnchor
+					class="cursor-pointer"
+					href="/internal/user"
+					target="_blank"
+					title="Account"
+					bind:group={currentTile}
+					value={5}
+					name="account"
+				>
 					<svelte:fragment slot="lead">
 						<Icon icon="material-symbols:person" height="40" class="mx-auto" />
 					</svelte:fragment>
@@ -55,29 +114,18 @@
 			</svelte:fragment>
 		</AppRail>
 		<div class="py-2 w-2/3">
-			<ListBox padding="py-2 px-4">
-				{#if currentTile==0}
-					<ListBoxItem bind:group={valueSingle} name="medium" value="resumeP" class="flex flex-col">
-						<a href="/internal" class="block !w-full !h-full">Projects Resume</a>
-					</ListBoxItem>
-					<ListBoxItem bind:group={valueSingle} name="medium" value="createP">Create project</ListBoxItem>
-					<ListBoxItem bind:group={valueSingle} name="medium" value="searchP">Search Projects</ListBoxItem>
-				{:else if currentTile == 1}
-					<ListBoxItem bind:group={valueSingle} name="medium" value="resumeE">Employees Resume</ListBoxItem>
-					<ListBoxItem bind:group={valueSingle} name="medium" value="registE">Register employee</ListBoxItem>
-					<ListBoxItem bind:group={valueSingle} name="medium" value="searchE">Search Employees</ListBoxItem>
-				{:else if currentTile == 2}
-					<ListBoxItem bind:group={valueSingle} name="medium" value="resumeT">Tasks Resume</ListBoxItem>
-					<ListBoxItem bind:group={valueSingle} name="medium" value="addTask">Add task</ListBoxItem>
-					<ListBoxItem bind:group={valueSingle} name="medium" value="searchT">Search Tasks</ListBoxItem>
-				{:else if currentTile == 3}
-					<ListBoxItem bind:group={valueSingle} name="medium" value="resumeMP">Projects Resume</ListBoxItem>
-					<ListBoxItem bind:group={valueSingle} name="medium" value="searchMP">Search Projects</ListBoxItem>
-				{:else if currentTile == 4}
-					<ListBoxItem bind:group={valueSingle} name="medium" value="resumeMT">Tasks Resume</ListBoxItem>
-					<ListBoxItem bind:group={valueSingle} name="medium" value="searchMT">Search Tasks</ListBoxItem>
-				{/if}
-			</ListBox>
+			<nav class="list-nav">
+				<ul>
+					{#each links.children as link}
+						<li>
+							<a href="/internal{links.base}{link.href}">
+								<span class="flex-auto">{link.name}</span>
+							</a>
+						</li>
+					{/each}
+					<!-- ... -->
+				</ul>
+			</nav>
 		</div>
 	</section>
 	<div class="p-5">
