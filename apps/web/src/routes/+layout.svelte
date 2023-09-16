@@ -23,7 +23,7 @@
 </script>
 
 <!-- App Shell -->
-<AppShell>
+<AppShell regionPage="dark:bg-gray-800 bg-gray-50">
 	<svelte:fragment slot="header">
 		<!-- App Bar -->
 		<AppBar gridColumns="grid-cols-3" slotDefault="place-self-center" slotTrail="place-content-end">
@@ -39,5 +39,5 @@
 		</AppBar>
 	</svelte:fragment>
 	<!-- Page Route Content -->
-	<slot />
+	<slot/>
 </AppShell>
