@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { base } from '$app/paths';
+	import { page } from '$app/stores';
 	import Icon from '@iconify/svelte';
 	import {
 		AppRail,
@@ -54,6 +55,9 @@
 	];
 
 	let links: { base: string; children: { name: string; href: string }[] };
+
+	let classesActive: (href: string) => string;
+	$: classesActive = (href: string) => (href === $page.url.pathname ? '!bg-primary-500' : '');
 	$: links = allLinks[currentTile];
 </script>
 
@@ -118,7 +122,7 @@
 				<ul>
 					{#each links.children as link}
 						<li>
-							<a href="/internal{links.base}{link.href}">
+							<a href="/internal{links.base}{link.href}" class="{classesActive(`/internal${links.base}${link.href}`)}">
 								<span class="flex-auto">{link.name}</span>
 							</a>
 						</li>
