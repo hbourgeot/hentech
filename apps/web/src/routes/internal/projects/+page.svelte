@@ -14,11 +14,11 @@
 		Finished: 'rgba(0,0,255,1)',
 		Pending: 'rgba(255,165,0,1)'
 	};
-
+	
     let start = 0;
 
 	// Llena el array de ConicStops
-	for (const [state, count] of Object.entries(data.projectCount)) {
+	for (const [state, count] of Object.entries(data.count)) {
 		const end = start + (count / data.projects.length) * 100;
 		conicStops.push({
 			label: state,

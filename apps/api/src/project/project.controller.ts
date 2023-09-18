@@ -17,7 +17,7 @@ import {
 } from '@nestjs/swagger';
 import { CreateProjectDto, ProjectSearchDTO, UpdateProjectDto } from './dto/project.dto';
 import { Project } from './entity/project.entity';
-import { DeleteResult, FindOptionsWhere } from 'typeorm';
+import { DeleteResult, FindOptionsWhere, Like } from 'typeorm';
 import { Employee } from 'src/employee/entity/employee.entity';
 import { EmployeeProjectService } from 'src/employee-project/employeeProject.service';
 
@@ -36,6 +36,7 @@ export class ProjectController {
     projectEnt.comercialDesignation = project.comercialDesignation;
     projectEnt.name = project.name;
     projectEnt.status = project.status;
+    projectEnt.type = project.type;
 
     projectEnt.leader = new Employee();
     projectEnt.leader.id = project.leaderId;
@@ -102,17 +103,19 @@ export class ProjectController {
 
   @Get('search')
   async searchProjects(@Query() search: ProjectSearchDTO) {
-    console.log(search);
     const project: FindOptionsWhere<Project> = {
-      comercialDesignation: search.comercialDesignation,
-      name: search.name,
-      status: search.status,
-      type: search.type,
-      id: search.id === undefined ? undefined : parseInt(search.id as string),
+      comercialDesignation: search.comercialDesignation ? Like(`%${search.comercialDesignation}%`) : undefined,
+      name: search.name ? Like(`%${search.name}%`) : undefined,
+      status: search.status ? Like(`%${search.status}%`) : undefined,
+      type: search.type ? Like(`%${search.type}%`) : undefined,
+      //@ts-ignore
+      id: search.id ? Like(`%${search.id}%`) : undefined,
       leader: {
-        id: search.leaderId === undefined ? undefined : parseInt(search.leaderId as string),
+        //@ts-ignore
+        id: search.leaderId,
       },
     };
-    return await this.projectService.getAll(undefined, undefined, project)
+    console.log(search, project);
+    return await this.projectService.search(project)
   }
 }

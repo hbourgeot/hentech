@@ -3,6 +3,7 @@
 	import type { PaginationSettings } from '@skeletonlabs/skeleton';
 	import type { PageData } from './$types';
 	import Icon from '@iconify/svelte';
+	import { enhance } from '$app/forms';
 	export let data: PageData;
 
 	let paginationSettings: PaginationSettings = {
@@ -12,7 +13,7 @@
 		amounts: [1, 2, 5, 10, 20]
 	};
 
-	let headers = ['ID', 'Name', 'Comercial Designation', 'Leader', 'Status', 'Actions'];
+	let headers = ['ID', 'Name', 'Comercial Designation', 'Leader', 'Status', 'Type', 'Actions'];
 
 	let paginatedSource: {
 		id: number;
@@ -20,17 +21,19 @@
 		name: string;
 		comercialDesignation: string;
 		leader: string;
+        type: string;
 	}[] = [];
 
 	$: paginatedSource = data.projects.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
+
 </script>
 
 <main class="w-full">
 	<h1 class="text-3xl font-bold text-center">Search Projects</h1>
-    <section class="grid grid-cols-3 gap-3 my-3 border-b p-3 pb-8 border-b-primary-400/30">
+    <form method="post" use:enhance class="grid grid-cols-3 gap-5 my-3 border-b p-3 pb-8 border-b-primary-400/30">
         <label for="id" class="label">
             <span>ID</span>
             <input type="text" class="input (text)" name="id" id="id">
@@ -41,15 +44,20 @@
         </label>
         <label for="comercialDesignation" class="label">
             <span>Comercial Designation</span>
-            <input type="text" class="input (text)">
+            <input type="text" class="input (text)" name="comercialDesignation" id="comercialDesignation">
         </label>
         <label for="leader" class="label">
-            <span>Leader</span>
-            <input type="text" class="input" id="leader" name="leader">
+            <span>Leader ID</span>
+            <input type="number" class="input" id="leader" name="leaderId">
+        </label>
+        <label for="leader" class="label">
+            <span>Type</span>
+            <input type="text" class="input" id="leader" name="type">
         </label>
         <label for="status" class="label">
             <span>Status</span>
-            <select id="status" name="status" required class="select rounded-full">
+            <select id="status" name="status" class="select rounded-full">
+                <option value="">All</option>
 				<option value="Active">Active</option>
 				<option value="Inactive">Inactive</option>
 				<option value="Abandoned">Abandoned</option>
@@ -57,7 +65,11 @@
 				<option value="Pending">Pending</option>
 			</select>
         </label>
-    </section>
+        <div class="col-span-3 w-full flex justify-center gap-x-4">
+            <button type="reset" class="btn variant-filled-surface">Clean Filters</button>
+            <button type="submit" class="btn variant-filled-primary">Search</button>
+        </div>
+    </form>
     <h2 class="text-2xl font-semibold">Projects List</h2>
 	<table class="table !my-4">
         <tr>
@@ -72,6 +84,7 @@
                 <td class="!p-3">{item.comercialDesignation}</td>
                 <td class="!p-3">{item.leader}</td>
                 <td class="!p-3">{item.status}</td>
+                <td class="!p-3">{item.type}</td>
                 <td class="!p-3">
                     <a href="/internal/projects/search" class="btn btn-icon variant-ghost-primary">
                         <Icon icon="mdi:eye-outline" class="h-"/>

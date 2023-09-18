@@ -40,7 +40,7 @@ export class UpdateProjectDto {
 
 export class ProjectSearchDTO {
   @ApiPropertyOptional()
-  id?: string;
+  id?: number;
 
   @ApiPropertyOptional()
   name?: string;
@@ -55,5 +55,5 @@ export class ProjectSearchDTO {
   type?: string;
 
   @ApiPropertyOptional()
-  leaderId?: string;
+  leaderId?: number;
 }
