@@ -6,19 +6,19 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 export class Version {
   @ApiProperty()
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @ApiProperty()
   @Column({ type: 'timestamp with time zone' })
-  date: Date;
+  date!: Date;
 
   @ApiProperty()
   @Column({ length: 200 })
-  description: string;
+  description!: string;
 
   @ApiProperty()
   @Column({ length: 50 })
-  tag: string;
+  tag!: string;
 
   @ApiProperty({ type: () => Document })
   @ManyToOne(() => Document, (document) => document.versions)

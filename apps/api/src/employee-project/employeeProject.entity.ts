@@ -5,14 +5,14 @@ import { Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 @Entity('employee_project')
 export class EmployeeProject {
   @PrimaryColumn()
-  employeeId: number;
+  employeeId!: number;
 
   @PrimaryColumn()
-  projectId: number;
+  projectId!: number;
 
   @ManyToOne(() => Employee)
-  employee: Employee;
+  employee!: Employee;
 
   @ManyToOne(() => Project)
-  project: Project;
+  project!: Project;
 }

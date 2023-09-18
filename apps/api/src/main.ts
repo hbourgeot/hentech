@@ -19,10 +19,15 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const logger = new Logger();
 
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.setGlobalPrefix('api');
+  app.enableCors();
+
   const config = new DocumentBuilder()
     .setTitle('HenTech API')
     .setDescription('HenTech API for project organization')
     .setVersion('1.0')
+    .setBasePath('/api')
     .addTag('auth', 'Auth API')
     .addTag('employee', 'Employee API')
     .addTag('projects', 'Projects API')
@@ -33,9 +38,7 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
 
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   SwaggerModule.setup('api/docs', app, document);
-  app.setGlobalPrefix('api');
 
   if (process.env.NODE_ENV === 'production') {
     const handler = (await importHandler()).handler;

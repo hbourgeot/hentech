@@ -16,23 +16,23 @@ import {
 export class Project {
   @ApiProperty()
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @ApiProperty()
   @Column({ length: 50 })
-  name: string;
+  name!: string;
 
   @ApiProperty()
   @Column({ length: 50 })
-  comercialDesignation: string;
+  comercialDesignation!: string;
 
   @ApiProperty()
   @Column({ length: 50 })
-  status: string;
+  status!: string;
 
   @ApiProperty({ type: () => Employee })
   @ManyToOne(() => Employee, (employee) => employee.ledProjects)
-  leader: Employee;
+  leader!: Employee;
 
   @ApiPropertyOptional({ type: Task, isArray: true })
   @OneToMany(() => Task, (task) => task.project)
@@ -41,9 +41,9 @@ export class Project {
   @ApiProperty({ type: () => Employee, isArray: true })
   @ManyToMany(() => Employee)
   @JoinTable({
-    name: 'employee_project', // corresponds to EmployeeProject model
+    name: 'employee_project',
     joinColumn: { name: 'projectId', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'employeeId', referencedColumnName: 'id' },
   })
-  employees: EmployeeProject[];
+  employees!: EmployeeProject[];
 }

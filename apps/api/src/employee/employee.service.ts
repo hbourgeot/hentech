@@ -25,7 +25,7 @@ export class EmployeeService {
     where?: FindOptionsWhere<Employee>,
     order?: FindOptionsOrder<Employee>,
   ): Promise<Employee[]> {
-    return await this.repo.find({ skip, take, where, order });
+    return await this.repo.find({ skip, take, where, order, relations: {role: true, employeeProjects: true} });
   }
 
   async create(data: Employee): Promise<Employee> {
