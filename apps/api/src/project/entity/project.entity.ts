@@ -30,6 +30,9 @@ export class Project {
   @Column({ length: 50 })
   status!: string;
 
+  @Column({length: 50, nullable: true})
+  type!: string;
+
   @ApiProperty({ type: () => Employee })
   @ManyToOne(() => Employee, (employee) => employee.ledProjects)
   leader!: Employee;

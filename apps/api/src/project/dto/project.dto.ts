@@ -9,6 +9,9 @@ export class CreateProjectDto {
   comercialDesignation!: string;
 
   @ApiProperty()
+  type!: string;
+
+  @ApiProperty()
   status!: string;
 
   @ApiProperty()
@@ -19,14 +22,38 @@ export class CreateProjectDto {
 export class UpdateProjectDto {
   @ApiPropertyOptional()
   name?: string;
+
   @ApiPropertyOptional()
   comercialDesignation?: string;
+
   @ApiPropertyOptional()
   status?: string;
+
+  @ApiPropertyOptional()
+  type?: string;
+  
   @ApiPropertyOptional()
   leader?: {
     id: number;
   };
 }
 
-// Delete no necesita DTO, el ID es suficiente
+export class ProjectSearchDTO {
+  @ApiPropertyOptional()
+  id?: string;
+
+  @ApiPropertyOptional()
+  name?: string;
+
+  @ApiPropertyOptional()
+  comercialDesignation?: string;
+
+  @ApiPropertyOptional()
+  status?: string;
+
+  @ApiPropertyOptional()
+  type?: string;
+
+  @ApiPropertyOptional()
+  leaderId?: string;
+}

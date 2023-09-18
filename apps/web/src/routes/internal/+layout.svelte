@@ -62,8 +62,8 @@
 </script>
 
 <main class="flex">
-	<section class="flex w-1/3 gap-x-2 sticky top-[65px]">
-		<AppRail>
+	<section class="flex w-1/4 gap-x-2 sticky top-[65px]">
+		<AppRail class="mr-2">
 			<!-- --- -->
 			<AppRailTile bind:group={currentTile} name="tile-1" value={0} title="projects">
 				<svelte:fragment slot="lead">
@@ -117,7 +117,7 @@
 				</AppRailAnchor>
 			</svelte:fragment>
 		</AppRail>
-		<div class="py-2 w-2/3">
+		<div class="py-2 border-l-2 border-l-gray-200/20 px-3 flex-1">
 			<nav class="list-nav">
 				<ul>
 					{#each links.children as link}

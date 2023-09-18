@@ -32,13 +32,24 @@ interface Employee {
 
 interface Project {
 	comercialDesignation: string;
-	employees: Leader[];
+	employees: Employee[];
 	id: number;
 	leader: Employee;
 	name: string;
 	status: string;
 	tasks: any[];
 }
+
+export interface RootObject {
+ comercialDesignation: string;
+ employees:            Leader[];
+ id:                   number;
+ leader:               Leader;
+ name:                 string;
+ status:               string;
+ tasks:                any[];
+}
+
 
 interface tokenPayload {
 	sub: string;

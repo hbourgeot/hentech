@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import {
@@ -14,14 +15,14 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateProjectDto, UpdateProjectDto } from './dto/project.dto';
+import { CreateProjectDto, ProjectSearchDTO, UpdateProjectDto } from './dto/project.dto';
 import { Project } from './entity/project.entity';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, FindOptionsWhere } from 'typeorm';
 import { Employee } from 'src/employee/entity/employee.entity';
 import { EmployeeProjectService } from 'src/employee-project/employeeProject.service';
 
 @ApiTags('projects')
-@Controller('project')
+@Controller('projects')
 export class ProjectController {
   constructor(
     private readonly projectService: ProjectService,
@@ -45,7 +46,7 @@ export class ProjectController {
   @ApiOkResponse({ type: Project })
   @ApiBadRequestResponse({ type: undefined, description: 'Bad Request' })
   @ApiNotFoundResponse({ type: undefined, description: 'Project Not Found' })
-  @Get(':id')
+  @Get('project/:id')
   async getEmployee(@Param('id') stringId: string): Promise<Project | null> {
     const id = Number(+stringId);
     return await this.projectService.getOne(id);
@@ -58,7 +59,7 @@ export class ProjectController {
   }
 
   @ApiOkResponse({ type: Project })
-  @Patch(':id')
+  @Patch('project/:id')
   async updateEmployee(
     @Param('id') stringId: string,
     @Body() updatedEmployee: UpdateProjectDto,
@@ -72,13 +73,13 @@ export class ProjectController {
   }
 
   @ApiOkResponse({ type: Project })
-  @Delete(':id')
+  @Delete('project/:id')
   async deleteEmployee(@Param('id') stringId: string): Promise<DeleteResult> {
     const id = Number(+stringId);
     return await this.projectService.del({ id });
   }
 
-  @Get(':id/employees')
+  @Get('project/:id/employees')
   async getProjectEmployees(@Param('id') id: string) {
     return await this.employeeProjectService.getAll(
       0,
@@ -97,5 +98,21 @@ export class ProjectController {
         },
       },
     );
+  }
+
+  @Get('search')
+  async searchProjects(@Query() search: ProjectSearchDTO) {
+    console.log(search);
+    const project: FindOptionsWhere<Project> = {
+      comercialDesignation: search.comercialDesignation,
+      name: search.name,
+      status: search.status,
+      type: search.type,
+      id: search.id === undefined ? undefined : parseInt(search.id as string),
+      leader: {
+        id: search.leaderId === undefined ? undefined : parseInt(search.leaderId as string),
+      },
+    };
+    return await this.projectService.getAll(undefined, undefined, project)
   }
 }

@@ -81,5 +81,34 @@ export class UpdateEmployeeDto {
   roleId?: number;
 
   @ApiHideProperty()
-  role!: Role
+  role?: Role;
+}
+
+export class SearchEmployeeDto {
+  @ApiPropertyOptional()
+  id?: number;
+
+  @ApiPropertyOptional()
+  roleId?: number;
+
+  @ApiPropertyOptional()
+  name?: string;
+
+  @ApiPropertyOptional()
+  lastName?: string;
+
+  @ApiPropertyOptional()
+  address?: string;
+
+  @ApiPropertyOptional()
+  email?: string;
+
+  @ApiPropertyOptional()
+  password?: string;
+
+  @ApiPropertyOptional()
+  phoneNumber?: string;
+
+  @ApiPropertyOptional()
+  role?: Role;
 }
