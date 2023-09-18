@@ -39,15 +39,21 @@ export class UpdateProjectDto {
 }
 
 export class ProjectSearchDTO {
-  @ApiProperty()
-  id?: number;
+  @ApiPropertyOptional()
+  id?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   name?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   comercialDesignation?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   status?: string;
+
+  @ApiPropertyOptional()
+  type?: string;
+
+  @ApiPropertyOptional()
+  leaderId?: string;
 }
