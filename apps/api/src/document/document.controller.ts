@@ -6,12 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { DocumentService } from './document.service';
-import { CreateDocumentDto, UpdateDocumentDto } from './dto/doc.dto';
+import { CreateDocumentDto, SearchDocumentDto, UpdateDocumentDto } from './dto/doc.dto';
 import { Document } from './entity/document.entity';
 import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, FindOptionsWhere } from 'typeorm';
 
 @ApiTags('docs')
 @Controller('document')
@@ -27,7 +28,7 @@ export class DocumentController {
   @ApiOkResponse({ type: Document })
   @ApiBadRequestResponse({ type: undefined, description: 'Bad Request' })
   @ApiNotFoundResponse({ type: undefined, description: 'Document Not Found' })
-  @Get(':id')
+  @Get('doc/:id')
   async getDocument(@Param('id') stringId: string): Promise<Document | null> {
     const id = Number(+stringId);
     return await this.documentService.getOne(id);
@@ -40,7 +41,7 @@ export class DocumentController {
   }
 
   @ApiOkResponse({ type: Document })
-  @Patch(':id')
+  @Patch('doc/:id')
   async updateDocument(
     @Param('id') stringId: string,
     @Body() updatedDocument: UpdateDocumentDto,
@@ -54,9 +55,24 @@ export class DocumentController {
   }
 
   @ApiOkResponse({ type: Document })
-  @Delete(':id')
+  @Delete('doc/:id')
   async deleteDocument(@Param('id') stringId: string): Promise<DeleteResult> {
     const id = Number(+stringId);
     return await this.documentService.del({ id });
+  }
+
+  @Get('search')
+  async searchProjects(@Query() search: SearchDocumentDto) {
+    const doc: FindOptionsWhere<Document> = {
+      description: search.description,
+      id: search.id === undefined ? undefined : parseInt(search.id),
+      sourceCode: search.sourceCode,
+      specificationDocument: search.specificationDocument,
+      type: search.type,
+      task: {
+        id: search.taskId === undefined ? undefined : parseInt(search.taskId)
+      }
+    };
+    return await this.documentService.getAll(undefined, undefined, doc);
   }
 }
