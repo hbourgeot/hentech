@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import {
@@ -97,5 +98,10 @@ export class ProjectController {
         },
       },
     );
+  }
+
+  @Get('search')
+  async searchProjects(@Query() project: Project) {
+    
   }
 }

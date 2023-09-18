@@ -29,4 +29,16 @@ export class UpdateProjectDto {
   };
 }
 
-// Delete no necesita DTO, el ID es suficiente
+export class ProjectSearchDTO {
+  @ApiProperty()
+  id?: number;
+
+  @ApiProperty()
+  name?: string;
+
+  @ApiProperty()
+  comercialDesignation?: string;
+
+  @ApiProperty()
+  status?: string;
+}
