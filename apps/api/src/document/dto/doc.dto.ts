@@ -29,4 +29,19 @@ export class UpdateDocumentDto {
   taskId?: number;
 }
 
+export class SearchDocumentDto {
+  @ApiPropertyOptional()
+  id?: string;
+  @ApiPropertyOptional()
+  specificationDocument?: string;
+  @ApiPropertyOptional()
+  sourceCode?: string;
+  @ApiPropertyOptional()
+  description?: string;
+  @ApiPropertyOptional()
+  type?: string;
+  @ApiProperty()
+  taskId!: string;
+}
+
 // Delete no necesita DTO, el ID es suficiente
