@@ -12,11 +12,11 @@
 <section class="w-full">
 	<h1 class="text-center text-3xl font-bold">Create project</h1>
 	<form use:enhance method="post" class="w-1/2 mx-auto">
-		<label for="name" class="label">
+		<label for="name" class="label mb-4">
 			<span>Name</span>
 			<input type="text" class="input (text)" required name="name" id="name" />
 		</label>
-		<label for="comercialDesignation" class="label">
+		<label for="comercialDesignation" class="label mb-4">
 			<span>Comercial Designation</span>
 			<input
 				type="text"
@@ -25,11 +25,11 @@
 				id="comercialDesignation" required
 			/>
 		</label>
-		<label for="type" class="label">
+		<label for="type" class="label mb-4">
 			<span>Type</span>
 			<input type="text" class="input (text)" required name="type" id="type" />
 		</label>
-		<label for="status" class="label">
+		<label for="status" class="label mb-4">
 			<span>Status</span>
 			<select id="status" name="status" required class="select rounded-full">
 				<option value="Active">Active</option>
@@ -39,7 +39,7 @@
 				<option value="Pending">Pending</option>
 			</select>
 		</label>
-		<label for="leader" class="label">
+		<label for="leader" class="label mb-4">
             <span>Leader</span>
             <div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
                 <div class="input-group-shim">{leader}</div>

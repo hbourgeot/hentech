@@ -38,16 +38,7 @@ interface Project {
 	name: string;
 	status: string;
 	tasks: any[];
-}
-
-export interface RootObject {
- comercialDesignation: string;
- employees:            Leader[];
- id:                   number;
- leader:               Leader;
- name:                 string;
- status:               string;
- tasks:                any[];
+	type: string;
 }
 
 

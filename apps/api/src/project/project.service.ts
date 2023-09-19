@@ -11,9 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class ProjectService {
-  constructor(
-    @InjectRepository(Project) private repo: Repository<Project>,
-  ) {}
+  constructor(@InjectRepository(Project) private repo: Repository<Project>) {}
 
   async getOne(project: number): Promise<Project | null> {
     return this.repo.findOne({
@@ -51,5 +49,11 @@ export class ProjectService {
 
   async del(criteria: FindOptionsWhere<Project>): Promise<DeleteResult> {
     return await this.repo.delete(criteria);
+  }
+
+  async search(
+    where: FindOptionsWhere<Project>,
+  ): Promise<Project[]> {
+    return await this.repo.findBy({...where});
   }
 }
