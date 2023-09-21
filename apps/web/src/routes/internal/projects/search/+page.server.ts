@@ -22,7 +22,6 @@ export const load = (async ({ locals: { client } }) => {
 		type: project.type
     }));
     queryStore.set({})
-    console.log(projects, "cl");
 	return { projects };
 }) satisfies PageServerLoad;
 

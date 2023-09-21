@@ -48,11 +48,11 @@
         </label>
         <label for="leader" class="label">
             <span>Leader ID</span>
-            <input type="number" class="input" id="leader" name="leaderId">
+            <input type="text" class="input" id="leader" name="leaderId">
         </label>
-        <label for="leader" class="label">
+        <label for="type" class="label">
             <span>Type</span>
-            <input type="text" class="input" id="leader" name="type">
+            <input type="text" class="input" id="type" name="type">
         </label>
         <label for="status" class="label">
             <span>Status</span>
@@ -86,7 +86,7 @@
                 <td class="!p-3">{item.status}</td>
                 <td class="!p-3">{item.type}</td>
                 <td class="!p-3">
-                    <a href="/internal/projects/search" class="btn btn-icon variant-ghost-primary">
+                    <a href="/internal/projects/{item.id}" class="btn btn-icon variant-ghost-primary">
                         <Icon icon="mdi:eye-outline" class="h-"/>
                     </a>
                 </td>
