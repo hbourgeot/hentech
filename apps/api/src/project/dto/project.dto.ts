@@ -55,5 +55,5 @@ export class ProjectSearchDTO {
   type?: string;
 
   @ApiPropertyOptional()
-  leaderId?: number;
+  leaderId?: string;
 }
