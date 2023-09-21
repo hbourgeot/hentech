@@ -10,6 +10,7 @@ import { VersionModule } from './version/version.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join, resolve } from 'path';
 import { AppController } from './app.controller';
+import { ClientsModule } from './clients/clients.module';
 
 @Module({
   imports: [
@@ -34,7 +35,8 @@ import { AppController } from './app.controller';
         synchronize: true,
       }),
       inject: [ConfigService]
-    })
+    }),
+    ClientsModule
   ],
   controllers: [AppController],
   providers: [],

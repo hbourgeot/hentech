@@ -6,9 +6,10 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
-import { CreateTaskDto, UpdateTaskDto } from './dto/task.dto';
+import { CreateTaskDto, SearchTaskDto, UpdateTaskDto } from './dto/task.dto';
 import { Task } from './entity/task.entity';
 import {
   ApiBadRequestResponse,
@@ -17,10 +18,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Project } from 'src/project/entity/project.entity';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, FindOptionsWhere } from 'typeorm';
 
 @ApiTags('tasks')
-@Controller('task')
+@Controller('tasks')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
@@ -46,7 +47,7 @@ export class TaskController {
   @ApiOkResponse({ type: Task })
   @ApiBadRequestResponse({ type: undefined, description: 'Bad Request' })
   @ApiNotFoundResponse({ type: undefined, description: 'Task Not Found' })
-  @Get(':id')
+  @Get('task/:id')
   async getTask(@Param('id') stringId: string): Promise<Task | null> {
     const id = Number(+stringId);
     return await this.taskService.getOne(id);
@@ -59,7 +60,7 @@ export class TaskController {
   }
 
   @ApiOkResponse({ type: Task })
-  @Patch(':id')
+  @Patch('task/:id')
   async updateTask(
     @Param('id') stringId: string,
     @Body() updatedTask: UpdateTaskDto,
@@ -70,9 +71,24 @@ export class TaskController {
   }
 
   @ApiOkResponse({ type: Task })
-  @Delete(':id')
+  @Delete('task/:id')
   async deleteTask(@Param('id') stringId: string): Promise<DeleteResult> {
     const id = Number(+stringId);
     return await this.taskService.del({ id });
+  }
+
+  @Get('search')
+  async searchTask(@Query() search: SearchTaskDto) {
+    const task: FindOptionsWhere<Task> = {
+      actualDate: search.actualDate,
+      actualDuration: search.actualDuration,
+      description: search.description,
+      estimatedDate: search.estimatedDate,
+      estimatedDuration: search.estimatedDuration,
+      id: search.id,
+      project: {
+        id: search.projectId
+      }
+    }
   }
 }

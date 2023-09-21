@@ -32,13 +32,15 @@ interface Employee {
 
 interface Project {
 	comercialDesignation: string;
-	employees: Leader[];
+	employees: Employee[];
 	id: number;
 	leader: Employee;
 	name: string;
 	status: string;
 	tasks: any[];
+	type: string;
 }
+
 
 interface tokenPayload {
 	sub: string;
