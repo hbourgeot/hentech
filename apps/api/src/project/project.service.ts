@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
+  DataSource,
   DeleteResult,
   FindOptionsOrder,
   FindOptionsWhere,
@@ -7,7 +8,8 @@ import {
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { Project } from './entity/project.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
+import { ProjectSearchDTO } from './dto/project.dto';
 
 @Injectable()
 export class ProjectService {
@@ -51,9 +53,33 @@ export class ProjectService {
     return await this.repo.delete(criteria);
   }
 
-  async search(
-    where: FindOptionsWhere<Project>,
-  ): Promise<Project[]> {
-    return await this.repo.findBy({...where});
+  /* async search(
+  where: FindOptionsWhere<Project>,
+): Promise<Project[]> {
+  return await this.repo.findBy({...where});
+} */
+
+  async search(params: ProjectSearchDTO) {
+    const query = this.repo
+      .createQueryBuilder('project')
+      .leftJoinAndSelect('project.leader', 'leader');
+
+    if (params.leaderId) {
+      query.andWhere("LOWER(CONCAT(leader.name, ' ', leader.lastName)) LIKE :leaderId", {
+        leaderId: `%${params.leaderId.toLowerCase()}%`,
+      });
+    }
+
+    for (const key in params) {
+      //@ts-ignore
+      if (params[key] && key !== 'leaderId') {
+        query.andWhere(`LOWER(project.${key}) LIKE :${key}`, {
+          //@ts-ignore
+          [key]: `%${params[key].toLowerCase()}%`,
+        });
+      }
+    }
+
+    return query.getMany();
   }
 }

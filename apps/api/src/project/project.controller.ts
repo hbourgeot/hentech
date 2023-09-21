@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  NotFoundException,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import {
@@ -50,7 +51,13 @@ export class ProjectController {
   @Get('project/:id')
   async getEmployee(@Param('id') stringId: string): Promise<Project | null> {
     const id = Number(+stringId);
-    return await this.projectService.getOne(id);
+    const project = await this.projectService.getOne(id);
+
+    if (!project) {
+      throw new NotFoundException('Project not found')
+    }
+
+    return project;
   }
 
   @ApiOkResponse({ type: Project, isArray: true })
@@ -103,19 +110,6 @@ export class ProjectController {
 
   @Get('search')
   async searchProjects(@Query() search: ProjectSearchDTO) {
-    const project: FindOptionsWhere<Project> = {
-      comercialDesignation: search.comercialDesignation ? Like(`%${search.comercialDesignation}%`) : undefined,
-      name: search.name ? Like(`%${search.name}%`) : undefined,
-      status: search.status ? Like(`%${search.status}%`) : undefined,
-      type: search.type ? Like(`%${search.type}%`) : undefined,
-      //@ts-ignore
-      id: search.id ? Like(`%${search.id}%`) : undefined,
-      leader: {
-        //@ts-ignore
-        id: search.leaderId,
-      },
-    };
-    console.log(search, project);
-    return await this.projectService.search(project)
+    return await this.projectService.search(search)
   }
 }
