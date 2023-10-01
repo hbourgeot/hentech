@@ -15,9 +15,11 @@ import {
 
 @Entity()
 export class Role {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id!: number;
 
+  @ApiProperty()
   @Column({ length: 50 })
   role!: string;
 }

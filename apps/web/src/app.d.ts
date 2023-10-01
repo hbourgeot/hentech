@@ -24,10 +24,12 @@ interface Client {
 interface Employee {
 	address: string;
 	email: string;
+	employeeProjects: EmployeeProject[];
 	id: number;
 	lastName: string;
 	name: string;
 	phoneNumber: string;
+	role: string;
 }
 
 interface Project {
@@ -39,6 +41,19 @@ interface Project {
 	status: string;
 	tasks: any[];
 	type: string;
+}
+
+export interface EmployeeProject {
+	comercialDesignation: string;
+	id: number;
+	name: string;
+	status: string;
+	type: null;
+}
+
+export interface Role {
+	id: number;
+	role: string;
 }
 
 

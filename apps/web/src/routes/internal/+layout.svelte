@@ -54,6 +54,9 @@
 		}
 	];
 
+	$: if ($page.url.pathname.includes('/internal/projects')) currentTile = 0;
+	else if ($page.url.pathname.includes('/internal/employees')) currentTile = 1;
+
 	let links: { base: string; children: { name: string; href: string }[] };
 
 	let classesActive: (href: string) => string;
@@ -122,7 +125,10 @@
 				<ul>
 					{#each links.children as link}
 						<li>
-							<a href="/internal{links.base}{link.href}" class="{classesActive(`/internal${links.base}${link.href}`)}">
+							<a
+								href="/internal{links.base}{link.href}"
+								class={classesActive(`/internal${links.base}${link.href}`)}
+							>
 								<span class="flex-auto">{link.name}</span>
 							</a>
 						</li>
