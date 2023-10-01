@@ -27,7 +27,11 @@ import { RoleService } from './role.service';
 @ApiTags('employee')
 @Controller('employees')
 export class EmployeeController {
-  constructor(private readonly employeeService: EmployeeService, private readonly employeeProjectService: EmployeeProjectService, private readonly roleService: RoleService) {}
+  constructor(
+    private readonly employeeService: EmployeeService,
+    private readonly employeeProjectService: EmployeeProjectService,
+    private readonly roleService: RoleService,
+  ) {}
 
   @ApiOkResponse({ type: Employee })
   @Post()
@@ -54,6 +58,12 @@ export class EmployeeController {
     return await this.employeeService.getAll();
   }
 
+  @ApiOkResponse({ type: Role, isArray: true })
+  @Get('roles')
+  async getRoles(): Promise<Role[]> {
+    return await this.roleService.getAll();
+  }
+
   @ApiOkResponse({ type: Employee })
   @Patch('emp/:id')
   async updateEmployee(
@@ -64,9 +74,9 @@ export class EmployeeController {
     const employee = (await this.employeeService.getOne(id)) as Employee;
 
     updatedEmployee.role = new Role();
-    updatedEmployee.role.id = updatedEmployee.roleId ?? employee.role.id
+    updatedEmployee.role.id = updatedEmployee.roleId ?? employee.role.id;
 
-    delete updatedEmployee.roleId
+    delete updatedEmployee.roleId;
     return await this.employeeService.update(
       { ...employee },
       { ...updatedEmployee },
@@ -82,23 +92,49 @@ export class EmployeeController {
 
   @Post('createRole')
   async createRole(@Query('role') role: string) {
-    return await this.roleService.create({id: 0, role})
+    return await this.roleService.create({ id: 0, role });
   }
 
   @Get(':emp/id/projects')
   async getEmployeeInProjects(@Param('id') id: string) {
-    return await this.employeeProjectService.getAll(0, 100, { employeeId: Number(+id) }, {project: {leader: true, tasks: true}, employee: false}, {project:{id:true,comercialDesignation:true,name:true,status:true,tasks: true,leader:{address:true,email:true,id:true,lastName:true,name:true,phoneNumber:true,password:false}}});
+    return await this.employeeProjectService.getAll(
+      0,
+      100,
+      { employeeId: Number(+id) },
+      { project: { leader: true, tasks: true }, employee: false },
+      {
+        project: {
+          id: true,
+          comercialDesignation: true,
+          name: true,
+          status: true,
+          tasks: true,
+          leader: {
+            address: true,
+            email: true,
+            id: true,
+            lastName: true,
+            name: true,
+            phoneNumber: true,
+            password: false,
+          },
+        },
+      },
+    );
   }
 
   @Post('addToProject')
-  async addToProject(@Query('employee') employee: number, @Query('project') project: number) {
-    const empPro = new EmployeeProject()
+  async addToProject(
+    @Query('employee') employee: number,
+    @Query('project') project: number,
+  ) {
+    const empPro = new EmployeeProject();
     empPro.employeeId = employee;
-    empPro.employee = new Employee()
+    empPro.employee = new Employee();
     empPro.employee.id = employee;
 
     empPro.projectId = project;
-    empPro.project = new Project()
+    empPro.project = new Project();
     empPro.project.id = project;
     return this.employeeProjectService.create(empPro);
   }
@@ -112,8 +148,8 @@ export class EmployeeController {
       lastName: search.lastName,
       name: search.name,
       phoneNumber: search.phoneNumber,
-      role: {id: search.roleId}
-    }
+      role: { id: search.roleId },
+    };
 
     return await this.employeeService.getAll(undefined, undefined, employee);
   }
