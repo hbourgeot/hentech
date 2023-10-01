@@ -15,17 +15,21 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateEmployeeDto, SearchEmployeeDto, UpdateEmployeeDto } from './dto/employee.dto';
+import {
+  CreateEmployeeDto,
+  SearchEmployeeDto,
+  UpdateEmployeeDto,
+} from './dto/employee.dto';
 import { Employee, Role } from './entity/employee.entity';
 import { DeleteResult, FindOptionsWhere } from 'typeorm';
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcrypt';
 import { EmployeeProjectService } from 'src/employee-project/employeeProject.service';
 import { EmployeeProject } from 'src/employee-project/employeeProject.entity';
 import { Project } from 'src/project/entity/project.entity';
 import { RoleService } from './role.service';
 
 @ApiTags('employee')
-@Controller('employees')
+@Controller('api/employees')
 export class EmployeeController {
   constructor(
     private readonly employeeService: EmployeeService,
@@ -141,7 +145,7 @@ export class EmployeeController {
 
   @Get('search')
   async searchEmployees(@Query() search: SearchEmployeeDto) {
-    let employee: FindOptionsWhere<Employee> = {
+    const employee: FindOptionsWhere<Employee> = {
       address: search.address,
       email: search.email,
       id: search.id,

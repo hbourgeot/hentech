@@ -16,14 +16,18 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateProjectDto, ProjectSearchDTO, UpdateProjectDto } from './dto/project.dto';
+import {
+  CreateProjectDto,
+  ProjectSearchDTO,
+  UpdateProjectDto,
+} from './dto/project.dto';
 import { Project } from './entity/project.entity';
 import { DeleteResult, FindOptionsWhere, Like } from 'typeorm';
 import { Employee } from 'src/employee/entity/employee.entity';
 import { EmployeeProjectService } from 'src/employee-project/employeeProject.service';
 
 @ApiTags('projects')
-@Controller('projects')
+@Controller('api/projects')
 export class ProjectController {
   constructor(
     private readonly projectService: ProjectService,
@@ -54,7 +58,7 @@ export class ProjectController {
     const project = await this.projectService.getOne(id);
 
     if (!project) {
-      throw new NotFoundException('Project not found')
+      throw new NotFoundException('Project not found');
     }
 
     return project;
@@ -110,6 +114,6 @@ export class ProjectController {
 
   @Get('search')
   async searchProjects(@Query() search: ProjectSearchDTO) {
-    return await this.projectService.search(search)
+    return await this.projectService.search(search);
   }
 }

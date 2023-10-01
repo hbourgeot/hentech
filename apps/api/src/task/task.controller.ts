@@ -21,7 +21,7 @@ import { Project } from 'src/project/entity/project.entity';
 import { DeleteResult, FindOptionsWhere } from 'typeorm';
 
 @ApiTags('tasks')
-@Controller('tasks')
+@Controller('api/tasks')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
@@ -87,8 +87,8 @@ export class TaskController {
       estimatedDuration: search.estimatedDuration,
       id: search.id,
       project: {
-        id: search.projectId
-      }
-    }
+        id: search.projectId,
+      },
+    };
   }
 }

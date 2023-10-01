@@ -9,12 +9,15 @@ import { TaskModule } from './task/task.module';
 import { VersionModule } from './version/version.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join, resolve } from 'path';
-import { AppController } from './app.controller';
 import { ClientsModule } from './clients/clients.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ expandVariables: true, isGlobal: true, envFilePath: resolve(__dirname, '../.env') }),
+    ConfigModule.forRoot({
+      expandVariables: true,
+      isGlobal: true,
+      envFilePath: resolve(__dirname, '../.env'),
+    }),
     EmployeeModule,
     ProjectModule,
     TaskModule,
@@ -26,19 +29,19 @@ import { ClientsModule } from './clients/clients.module';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get("DBHOST") ?? "",
-        port: parseInt(configService.get("DBPORT") as string),
-        username: configService.get("DBUSER"),
-        password: configService.get("DBPASS"),
-        database: configService.get("DBNAME"),
+        host: configService.get('DBHOST') ?? '',
+        port: parseInt(configService.get('DBPORT') as string),
+        username: configService.get('DBUSER'),
+        password: configService.get('DBPASS'),
+        database: configService.get('DBNAME'),
         entities: [join(__dirname, '**', '*.entity.{ts,js}')],
         synchronize: true,
       }),
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
-    ClientsModule
+    ClientsModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [],
 })
 export class AppModule {}
