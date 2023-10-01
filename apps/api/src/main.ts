@@ -51,7 +51,7 @@ async function bootstrap() {
     });
   }
 
-  await app.listen(3000);
+  await app.listen(3030);
 
   const endTime = process.hrtime(startTime);
   const started = (endTime[0] * 1000 + endTime[1] / 1e6).toFixed(2);
