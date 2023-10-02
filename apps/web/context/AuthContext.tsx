@@ -38,7 +38,12 @@ export const AuthProvider: React.FC<{ initialCookies?: string }> = ({
             setUserData(res.data.employee);
             setIsAuthenticated(true);
           })
-          .catch((e) => redirect("/login"));
+          .catch((e) => {
+            console.log(e);
+            setUserData(null);
+            setIsAuthenticated(false);
+            redirect("/login");
+          });
       }
     });
   }

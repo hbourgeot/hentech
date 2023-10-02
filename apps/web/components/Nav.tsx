@@ -43,7 +43,6 @@ let userLinks: { title: string; href: string; description: string; }[] = [
 export function Nav() {
   const [colorChange, setColorChange] = React.useState(false);
   const { isAuthenticated, user } = useAuth()
-  console.log(user)
   const router = useRouter()
   const route = router.route
 
