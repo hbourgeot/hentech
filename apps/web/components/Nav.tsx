@@ -12,49 +12,52 @@ import {
 import { useRouter } from "next/router"
 import { NavigationMenuViewport } from "@radix-ui/react-navigation-menu"
 import Link from "next/link"
+import { useAuth } from "@/context/AuthContext"
 
 let projectLinks: { title: string; href: string; description: string }[] =
   [
-    { title: 'Projects Resume', href: '/projects', description: 'Resume of the projects' },
-    { title: 'Create project', href: '/projects/create', description: 'Create a new project' },
-    { title: 'Search projects', href: '/projects/search', description: 'Search one/many projects' }
+    { title: 'Projects Resume', href:'/internal/projects', description: 'Resume of the projects' },
+    { title: 'Create project', href:'/internal/projects/create', description: 'Create a new project' },
+    { title: 'Search projects', href:'/internal/projects/search', description: 'Search one/many projects' }
   ]
 
 let employeeLinks: { title: string; href: string; description: string }[] = [
-  { title: 'Employees Resume', href: '/employees', description: 'Resume of the employees' },
-  { title: 'Register Employee', href: '/employees/register', description: 'Create a new employee' },
-  { title: 'Search Employees', href: '/employees/search', description: 'Search one/many employees' }
+  { title: 'Employees Resume', href:'/internal/employees', description: 'Resume of the employees' },
+  { title: 'Register Employee', href:'/internal/employees/register', description: 'Create a new employee' },
+  { title: 'Search Employees', href:'/internal/employees/search', description: 'Search one/many employees' }
 ]
 
 let taskLinks: { title: string; href: string; description: string }[] = [
-  { title: 'Tasks Resume', href: '/tasks', description: 'Resume of the tasks' },
-  { title: 'Add Task', href: '/tasks/add', description: 'Add a new task' },
-  { title: 'Search Tasks', href: '/tasks/search', description: 'Search one/many tasks' }
+  { title: 'Tasks Resume', href:'/internal/tasks', description: 'Resume of the tasks' },
+  { title: 'Add Task', href:'/internal/tasks/add', description: 'Add a new task' },
+  { title: 'Search Tasks', href:'/internal/tasks/search', description: 'Search one/many tasks' }
 ]
 
 let userLinks: { title: string; href: string; description: string; }[] = [
-  { title: 'Projects resume', href: '/user_info/projects', description: 'Resume of the projects' },
-  { title: 'Search projects', href: '/user_info/projects/search', description: 'Search one/many projects' },
-  { title: 'Tasks resume', href: '/user_info/tasks', description: 'Resume of the tasks' },
-  { title: 'Search tasks', href: '/user_info/tasks/search', description: 'Search one/many tasks' }
+  { title: 'Projects resume', href:'/internal/user_info/projects', description: 'Resume of the projects assigned' },
+  { title: 'Search projects', href:'/internal/user_info/projects/search', description: 'Search one/many projects assigned' },
+  { title: 'Tasks resume', href:'/internal/user_info/tasks', description: 'Resume of the tasks assigned' },
+  { title: 'Search tasks', href:'/internal/user_info/tasks/search', description: 'Search one/many tasks assigned' }
 ]
 
 export function Nav() {
   const [colorChange, setColorChange] = React.useState(false);
+  const { isAuthenticated, user } = useAuth()
+  console.log(user)
   const router = useRouter()
   const route = router.route
 
   const changeNavbarColor = () => {
-    if (window.scrollY >= 80) { setColorChange(true); } else { setColorChange(false); }
+    if (window.scrollY >= 30) { setColorChange(true); } else { setColorChange(false); }
   }
 
   if (typeof window !== "undefined") {
     window.addEventListener('scroll', changeNavbarColor);
   }
 
-  if (route.includes('internal')) {
+  if (route.includes('internal') || isAuthenticated) {
     return (
-      <section className={colorChange ? 'bg-primary w-full flex justify-between items-center p-3 sticky top-0' : 'bg-transparent w-full flex justify-between items-center p-3 sticky top-0'} >
+      <section className={colorChange ? 'bg-white w-full flex justify-between items-center p-3 sticky top-0' : 'bg-transparent w-full flex justify-between items-center p-3 sticky top-0'} >
         <h1 className="text-2xl font-bold"><a href="/" className="text-primary">HenTech</a></h1>
         <NavigationMenu>
           <NavigationMenuList>
@@ -112,7 +115,7 @@ export function Nav() {
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuTrigger>User</NavigationMenuTrigger>
+              <NavigationMenuTrigger className="capitalize">{ user?.name }</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[300px] gap-3 p-4 md:w-[400px] md:grid-cols-2 lg:w-[500px] ">
                   {userLinks.map((component) => (
@@ -133,7 +136,7 @@ export function Nav() {
     )
   } else {
     return (
-      <section className={colorChange ? 'bg-secondary w-full flex justify-between items-center p-3 sticky top-0' : 'bg-transparent w-full flex justify-between items-center px-3 sticky top-0'}>
+      <section className={colorChange ? 'bg-white w-full flex justify-between items-center p-3 sticky top-0' : 'bg-transparent w-full flex justify-between items-center px-3 sticky top-0'}>
         <h1 className="text-2xl font-bold"><a href="/" className="text-primary">HenTech</a></h1>
         <NavigationMenu>
           <NavigationMenuList>

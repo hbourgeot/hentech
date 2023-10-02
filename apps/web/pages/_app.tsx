@@ -1,6 +1,19 @@
+import { AuthProvider } from '@/context/AuthContext'
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 
-export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+function App({ Component, pageProps, cookies }: AppProps) {
+  return (
+    //@ts-ignore
+    <AuthProvider initialCookies={cookies}>
+      <Component {...pageProps} />
+    </AuthProvider>
+  );
 }
+
+App.getInitialProps = async ({ctx}) => {
+  const cookies = ctx.req?.headers.cookie;
+  return {cookies}
+}
+
+export default App
