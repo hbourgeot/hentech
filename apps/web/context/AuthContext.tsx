@@ -2,6 +2,7 @@
 import { client } from "@/lib/axios";
 import { Employee } from "@/lib/types";
 import { redirect } from "next/navigation";
+import { useRouter } from "next/router";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthContextProps {
@@ -28,25 +29,29 @@ export const AuthProvider: React.FC<{ initialCookies?: string }> = ({
 }) => {
   const [user, setUserData] = useState<Employee | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+  const router = useRouter()
+  let i = 0;
   const token = initialCookies?.replace("auth=", "Bearer ");
-  if (token) {
-    useEffect(() => {
-      if (!user) {
-        getData(token)
-          .then((res) => {
-            setUserData(res.data.employee);
-            setIsAuthenticated(true);
-          })
-          .catch((e) => {
-            console.log(e);
+  useEffect(() => {
+    if (token && !user) {
+      getData(token)
+        .then((res) => {
+          if (res.status === 401) {
             setUserData(null);
             setIsAuthenticated(false);
-            redirect("/login");
-          });
-      }
-    });
-  }
+            router.push("/login");
+            return;
+          }
+          setUserData(res.data.employee);
+          setIsAuthenticated(true);
+        })
+        .catch((e) => {
+          console.log(e);
+          setUserData(null);
+          setIsAuthenticated(false);
+        });
+    }
+  }, [token, user]);
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated }}>
