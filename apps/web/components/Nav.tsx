@@ -133,7 +133,7 @@ export function Nav() {
     )
   } else {
     return (
-      <section className={colorChange ? 'bg-secondary w-full flex justify-between items-center p-3 sticky top-0' : 'bg-transparent w-full flex justify-between items-center p-3 sticky top-0'}>
+      <section className={colorChange ? 'bg-secondary w-full flex justify-between items-center p-3 sticky top-0' : 'bg-transparent w-full flex justify-between items-center px-3 sticky top-0'}>
         <h1 className="text-2xl font-bold"><a href="/" className="text-primary">HenTech</a></h1>
         <NavigationMenu>
           <NavigationMenuList>

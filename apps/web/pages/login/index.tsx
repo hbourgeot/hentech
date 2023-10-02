@@ -19,10 +19,10 @@ export default function Login() {
           className="block"
         />
       </div>
-      <div className="container relative hidden h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+      <div className="container relative flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0" style={{height: 'calc(100vh - 56px)'}}>
         <div className="login-bg relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
           <div className="absolute inset-0 bg-zinc-900/60" />
-          <div className="relative z-20 flex items-center text-lg font-medium">
+          <div className="relative z-20 flex items-center justify-end font-medium text-xl">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -38,7 +38,7 @@ export default function Login() {
           </div>
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">
-              <p className="text-lg">
+              <p className="text-xl">
                 &ldquo;The work environment is quite pleasant and warm, and
                 carrying out the assigned projects has helped me a lot to grow
                 professionally and personally.&rdquo;
@@ -47,17 +47,17 @@ export default function Login() {
             </blockquote>
           </div>
         </div>
-        <div className="lg:p-8">
-          <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+        <div className="lg:p-8 py-4 md:py-0">
+          <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[400px]">
             <div className="flex flex-col space-y-2 text-center">
-              <h1 className="text-2xl font-semibold tracking-tight">
+              <h1 className="text-3xl font-semibold tracking-tight my-3">
                 Sign in
               </h1>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xl text-muted-foreground">
                 Enter your email and password below to sign in to our internal system.
               </p>
             </div>
-            <UserAuthForm />
+            <UserAuthForm className="text-3xl" />
           </div>
         </div>
       </div>

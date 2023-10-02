@@ -11,14 +11,12 @@ async function bootstrap() {
   const logger = new Logger();
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
-  app.setGlobalPrefix('api');
   app.enableCors();
 
   const config = new DocumentBuilder()
     .setTitle('HenTech API')
     .setDescription('HenTech API for project organization')
     .setVersion('1.0')
-    .setBasePath('/api')
     .addTag('auth', 'Auth API')
     .addTag('employee', 'Employee API')
     .addTag('projects', 'Projects API')

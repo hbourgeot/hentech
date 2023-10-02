@@ -62,4 +62,5 @@
 
 .login-bg{
   background-image: url('../public/login.jpg');
+  background-size: cover;
 }
