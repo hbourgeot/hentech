@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { redirect } from "next/navigation";
+import { useRouter } from "next/router";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -32,6 +33,7 @@ const formSchema = z.object({
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const router = useRouter()
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -40,7 +42,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     const { data } = await axios.post("/api/login", values);
     console.log("data", data);
     setIsLoading(false);
-    redirect('/')
+    router.push('/')
+    router.reload()
   }
   const [visible, setVisible] = React.useState(false);
   const form = useForm<z.infer<typeof formSchema>>({

@@ -13,6 +13,7 @@ import { useRouter } from "next/router"
 import { NavigationMenuViewport } from "@radix-ui/react-navigation-menu"
 import Link from "next/link"
 import { useAuth } from "@/context/AuthContext"
+import { Button } from "./ui/button"
 
 let projectLinks: { title: string; href: string; description: string }[] =
   [
@@ -37,7 +38,8 @@ let userLinks: { title: string; href: string; description: string; }[] = [
   { title: 'Projects resume', href:'/internal/user_info/projects', description: 'Resume of the projects assigned' },
   { title: 'Search projects', href:'/internal/user_info/projects/search', description: 'Search one/many projects assigned' },
   { title: 'Tasks resume', href:'/internal/user_info/tasks', description: 'Resume of the tasks assigned' },
-  { title: 'Search tasks', href:'/internal/user_info/tasks/search', description: 'Search one/many tasks assigned' }
+  { title: 'Search tasks', href: '/internal/user_info/tasks/search', description: 'Search one/many tasks assigned' },
+  {title:'Logout', href:'/logout', description: 'Sign out of our system'}
 ]
 
 export function Nav() {
@@ -46,10 +48,11 @@ export function Nav() {
   const router = useRouter()
   const route = router.route
 
+  
   const changeNavbarColor = () => {
     if (window.scrollY >= 30) { setColorChange(true); } else { setColorChange(false); }
   }
-
+  
   if (typeof window !== "undefined") {
     window.addEventListener('scroll', changeNavbarColor);
   }
@@ -60,11 +63,6 @@ export function Nav() {
         <h1 className="text-2xl font-bold"><a href="/" className="text-primary">HenTech</a></h1>
         <NavigationMenu>
           <NavigationMenuList>
-            <NavigationMenuItem>
-              <Link href="/about" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>About us</NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuTrigger>Projects</NavigationMenuTrigger>
               <NavigationMenuContent>
@@ -128,6 +126,21 @@ export function Nav() {
                   ))}
                 </ul>
               </NavigationMenuContent>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Button variant={'ghost'} onClick={() => {
+                fetch('/api/logout', {
+                  method: 'POST',
+                }).then(response => {
+                  if (response.ok) {
+                    // Redirige al usuario a la página de inicio o cualquier otra acción que desees realizar
+                  }
+                });
+                router.push('/login')
+                router.reload()
+              }}>
+                Log out
+              </Button>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
