@@ -4,15 +4,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
-import * as dotenv from 'dotenv'
-import { NextFunction } from 'express';
-
-dotenv.config({ path: join(__dirname, '../.env') });
-
-async function importHandler() {
-  const module = await import(join(__dirname,'../../web/build/handler.js'));
-  return module;
-}
 
 async function bootstrap() {
   const startTime = process.hrtime();
@@ -39,17 +30,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
 
   SwaggerModule.setup('api/docs', app, document);
-
-  if (process.env.NODE_ENV === 'production') {
-    const handler = (await importHandler()).handler;
-
-    app.use((req: Request, res: Response, next: NextFunction) => {
-      if (req.url.startsWith("/api")) {
-        return next();
-      }
-      return handler(req, res, next);
-    });
-  }
 
   await app.listen(3030);
 

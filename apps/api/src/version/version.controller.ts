@@ -10,11 +10,16 @@ import {
 import { VersionService } from './version.service';
 import { CreateVersionDto, UpdateVersionDto } from './dto/version.dto';
 import { Version } from './entity/version.entity';
-import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { DeleteResult } from 'typeorm';
 
 @ApiTags('version')
-@Controller('version')
+@Controller('api/version')
 export class VersionController {
   constructor(private readonly versionService: VersionService) {}
 

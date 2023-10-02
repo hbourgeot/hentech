@@ -9,13 +9,22 @@ import {
   Query,
 } from '@nestjs/common';
 import { DocumentService } from './document.service';
-import { CreateDocumentDto, SearchDocumentDto, UpdateDocumentDto } from './dto/doc.dto';
+import {
+  CreateDocumentDto,
+  SearchDocumentDto,
+  UpdateDocumentDto,
+} from './dto/doc.dto';
 import { Document } from './entity/document.entity';
-import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { DeleteResult, FindOptionsWhere } from 'typeorm';
 
 @ApiTags('docs')
-@Controller('document')
+@Controller('api/document')
 export class DocumentController {
   constructor(private readonly documentService: DocumentService) {}
 
@@ -70,8 +79,8 @@ export class DocumentController {
       specificationDocument: search.specificationDocument,
       type: search.type,
       task: {
-        id: search.taskId === undefined ? undefined : parseInt(search.taskId)
-      }
+        id: search.taskId === undefined ? undefined : parseInt(search.taskId),
+      },
     };
     return await this.documentService.getAll(undefined, undefined, doc);
   }
