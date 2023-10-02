@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Label } from "./ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import {
   Form,
@@ -18,15 +17,16 @@ import {
 } from "./ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { client } from "@/lib/axios";
+import axios from "axios";
+
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const formSchema = z.object({
   email: z
-    .string({ required_error: "Input required" })
+    .string({ required_error: "Input required" }).nonempty()
     .email({ message: "Email invalid" })
     .min(3),
-  password: z.string({ required_error: "Input required" }),
+  password: z.string({ required_error: "Input required" }).nonempty(),
 });
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
@@ -36,9 +36,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     console.log(values);
     setIsLoading(true);
 
-    const response = await client.post("/api/auth/login", values);
-    console.log("res", response);
-
+    const { data } = await axios.post("/api/login", values);
+    console.log("data", data);
     setIsLoading(false);
   }
   const [visible, setVisible] = React.useState(false);
