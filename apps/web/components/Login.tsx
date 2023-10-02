@@ -18,6 +18,7 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { redirect } from "next/navigation";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -39,6 +40,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     const { data } = await axios.post("/api/login", values);
     console.log("data", data);
     setIsLoading(false);
+    redirect('/')
   }
   const [visible, setVisible] = React.useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
