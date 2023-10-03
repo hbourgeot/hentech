@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import * as z from "zod";
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
 import { Button } from "./ui/button";
@@ -18,8 +17,9 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { redirect } from "next/navigation";
 import { useRouter } from "next/router";
+import * as z from "zod";
+import { useToast } from "./ui/use-toast";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -35,15 +35,17 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const router = useRouter()
 
+  const {toast } = useToast()
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     setIsLoading(true);
 
-    const { data } = await axios.post("/api/login", values);
-    console.log("data", data);
+    const { data, status } = await axios.post("/api/login", values);
+    if (data?.message) {
+      toast({title:data.message})
+    }
     setIsLoading(false);
     router.push('/')
-    router.reload()
   }
   const [visible, setVisible] = React.useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
