@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import * as z from "zod";
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
 import { Button } from "./ui/button";
@@ -18,14 +17,16 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { redirect } from "next/navigation";
 import { useRouter } from "next/router";
+import * as z from "zod";
+import { useToast } from "./ui/use-toast";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const formSchema = z.object({
   email: z
-    .string({ required_error: "Input required" }).nonempty()
+    .string({ required_error: "Input required" })
+    .nonempty()
     .email({ message: "Email invalid" })
     .min(3),
   password: z.string({ required_error: "Input required" }).nonempty(),
@@ -33,17 +34,26 @@ const formSchema = z.object({
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const router = useRouter()
+  const router = useRouter();
 
+  const { toast } = useToast();
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    setIsLoading(true);
+    try {
+      setIsLoading(true);
 
-    const { data } = await axios.post("/api/login", values);
-    console.log("data", data);
-    setIsLoading(false);
-    router.push('/')
-    router.reload()
+      const { data, status } = await axios.post("/api/login", values);
+      if (status === 400) {
+        toast({ title: data.message });
+        return;
+      }
+      setIsLoading(false);
+      router.push("/internal");
+    } catch (e: any) {
+      if (e.response.status === 400) {
+        toast({ title: e.response.data.message, duration: 3000 });
+      }
+      setIsLoading(false);
+    }
   }
   const [visible, setVisible] = React.useState(false);
   const form = useForm<z.infer<typeof formSchema>>({

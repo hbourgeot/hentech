@@ -25,19 +25,7 @@ function setCookie(
 ): void {
   const stringValue =
     typeof value === "object" ? `j:${JSON.stringify(value)}` : String(value);
-console.log(typeof res);
   res.setHeader("Set-Cookie", serialize(name, String(stringValue), options));
-}
-
-export function authenticateUser(res: any, user: Employee): void {
-  if (!user) return;
-
-  //@ts-ignore
-  const token = jwt.sign({ email: user.email }, SECRET_KEY, {
-    expiresIn: "50min",
-  });
-
-  setCookie(res, "auth", token, cookieOptions);
 }
 
 export function clearUser(res: NextApiResponse): void {
