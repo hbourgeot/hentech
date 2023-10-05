@@ -8,6 +8,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 interface AuthContextProps {
   user: Employee | null;
   isAuthenticated: boolean;
+  logout: () => void
   // ... otros campos y métodos que necesites
 }
 
@@ -29,21 +30,26 @@ export const AuthProvider: React.FC<{ initialCookies?: string }> = ({
 }) => {
   const [user, setUserData] = useState<Employee | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const router = useRouter()
-  let i = 0;
+  const router = useRouter();
   const token = initialCookies?.replace("auth=", "Bearer ");
+
+  const logout = () => {
+    setUserData(null);
+    setIsAuthenticated(false);
+  };
+
   useEffect(() => {
-    if (token && !user) {
+    if (token) {
       getData(token)
         .then((res) => {
           if (res.status === 401) {
             setUserData(null);
             setIsAuthenticated(false);
             router.push("/login");
-            return;
+          } else {
+            setUserData(res.data.employee);
+            setIsAuthenticated(true);
           }
-          setUserData(res.data.employee);
-          setIsAuthenticated(true);
         })
         .catch((e) => {
           console.log(e);
@@ -51,10 +57,10 @@ export const AuthProvider: React.FC<{ initialCookies?: string }> = ({
           setIsAuthenticated(false);
         });
     }
-  }, [token, user]);
+  }, [token]);
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, logout }}>
       {children}
     </AuthContext.Provider>
   );
