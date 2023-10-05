@@ -20,7 +20,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   if (status > 400) {
     ctx.res.statusCode = 400;
   }
-  console.log(data)
   return {
     props:{
       projects: data

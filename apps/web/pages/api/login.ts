@@ -10,7 +10,6 @@ export default async function handler(
   try {
     if (req.method === "POST") {
       const { data } = await client.post("/api/auth/login", req.body);
-      console.log(data);
       if (data?.status === 400) {
         res.status(400).json({ message: "Invalid email or password" });
       }

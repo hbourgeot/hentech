@@ -39,7 +39,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const { toast } = useToast();
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      console.log(values);
       setIsLoading(true);
 
       const { data, status } = await axios.post("/api/login", values);
@@ -50,7 +49,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       setIsLoading(false);
       router.push("/internal");
     } catch (e: any) {
-      console.log(typeof e);
       if (e.response.status === 400) {
         toast({ title: e.response.data.message, duration: 3000 });
       }

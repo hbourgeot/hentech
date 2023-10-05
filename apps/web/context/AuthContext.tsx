@@ -18,7 +18,6 @@ async function getData(token: string) {
       Authorization: token,
     },
   });
-  console.log(data, status);
   return { data, status };
 }
 
@@ -52,7 +51,6 @@ export const AuthProvider: React.FC<{ initialCookies?: string }> = ({
           }
         })
         .catch((e) => {
-          console.log(e);
           setUserData(null);
           setIsAuthenticated(false);
         });
