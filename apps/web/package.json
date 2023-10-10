@@ -41,6 +41,7 @@
     "eslint": "latest",
     "eslint-config-next": "latest",
     "postcss": "latest",
+    "recharts": "^2.8.0",
     "tailwindcss": "latest",
     "typescript": "latest"
   }
