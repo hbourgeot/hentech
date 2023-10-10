@@ -29,7 +29,7 @@ interface Props {
   fillOuter?: string;
 }
 
-export default function example({
+export function Bars({
   inner,
   outer,
   fillInner = "#8884d8",
@@ -37,11 +37,14 @@ export default function example({
   outerRadius,
   innerRadius
 }: Props) {
+  console.log(inner.length, outer.length)
+  if(!inner.length) inner = data01;
+  if(!outer.length) outer = data02;
   return (
     <ResponsiveContainer width="100%" height="100%">
       <PieChart width={400} height={400}>
         <Pie
-          data={inner.length === 0 ? data01 : inner}
+          data={data01}
           dataKey="value"
           cx="50%"
           cy="50%"
@@ -49,7 +52,7 @@ export default function example({
           fill={fillInner}
         />
         <Pie
-          data={outer.length === 0 ? data02 : outer}
+          data={data02}
           dataKey="value"
           cx="50%"
           cy="50%"
