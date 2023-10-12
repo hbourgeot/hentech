@@ -1,9 +1,6 @@
 import { UserAuthForm } from "@/components/Login";
 import { Nav } from "@/components/Nav";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import Image from "next/image";
-import Link from "next/link";
 import login from "@/public/login.jpg";
 
 export default function Login() {
