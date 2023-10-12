@@ -40,7 +40,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     const employees = data.map((item) => ({
       label: `${item.name} ${item.lastName}`,
-      value: item.id.toString(),
+      value: item.id,
     }));
     return {
       props: {

@@ -11,24 +11,31 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
+  FormDescription,
 } from "./ui/form";
 import { Input } from "./ui/input";
 import * as React from "react";
 import { Button } from "./ui/button";
 import { Combobox } from "./Combobox";
+import { client } from "@/lib/axios";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { SelectInput } from "./Select";
+import { CheckIcon, SlidersHorizontal } from "lucide-react";
+import { Popover, PopoverTrigger, PopoverContent } from "@radix-ui/react-popover";
+import { CommandInput, Command, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command";
 
 const projectSchema = z.object({
   name: z
     .string()
-    .nonempty({ message: "Name is required" })
+    .min(1,{ message: "Name is required" })
     .max(50, { message: "Name cannot exceed 50 characters" }),
   comercialDesignation: z
     .string()
-    .nonempty({ message: "Commercial Designation is required" })
+    .min(1,{ message: "Commercial Designation is required" })
     .max(50, { message: "Commercial Designation cannot exceed 50 characters" }),
   status: z
     .string()
-    .nonempty({ message: "Status is required" })
+    .min(1, { message: "Status is required" })
     .max(50, { message: "Status cannot exceed 50 characters" }),
   leaderId: z
     .number()
@@ -40,15 +47,24 @@ const projectSchema = z.object({
     }),
   type: z
     .string()
+    .min(1,{message: "Type is required"})
     .max(50, { message: "Type cannot exceed 50 characters" })
     .nullable(),
 });
 
+const stateOptions = [
+  { label: "Active", value: "Active" },
+  { label: "Inactive", value: "Inactive" },
+  { label: "Pending", value: "Pending" },
+  { label: "Finished", value: "Finished" },
+  { label: "Abandoned", value: "Abandoned" },
+];
+
 interface FormProps extends React.HTMLAttributes<HTMLDivElement>{
-  employees: { label: string; value: string; }[]
+  employees: { label: string; value: number; }[]
 }
 
-export function ProjectForm({className, employees, ...props}: FormProps) {
+export function ProjectForm({ className, employees, ...props }: FormProps) {
   const form = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
@@ -56,12 +72,13 @@ export function ProjectForm({className, employees, ...props}: FormProps) {
       comercialDesignation: "",
       status: "",
       leaderId: null,
-      type: null,
+      type: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof projectSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof projectSchema>) {
+    const {data} = await client.post('/api/projects', values)
+    console.log(data)
   }
 
   return (
@@ -105,9 +122,25 @@ export function ProjectForm({className, employees, ...props}: FormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Status</FormLabel>
-                <FormControl>
-                  <Input placeholder="Status" {...field} />
-                </FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {stateOptions.map((state, index) => (
+                      <SelectItem key={index} value={state.value}>
+                        {state.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormDescription>
+                  Status of the project
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -118,11 +151,60 @@ export function ProjectForm({className, employees, ...props}: FormProps) {
             control={form.control}
             name="leaderId"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col">
                 <FormLabel>Leader</FormLabel>
-                <FormControl>
-                  <Combobox data={employees} notFound="Employee not found" placeholder="Search employee..." className="w-full"/>
-                </FormControl>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "w-[200px] justify-between",
+                          !field.value && "text-muted-foreground"
+                        )}>
+                        {field.value
+                          ? employees.find(
+                              (employees) => employees.value === field.value
+                            )?.label
+                          : "Select employee"}
+                        <SlidersHorizontal className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput
+                        placeholder="Search employee..."
+                        className="h-9"
+                      />
+                      <CommandEmpty>No employee found.</CommandEmpty>
+                      <CommandGroup>
+                        {employees.map((employee) => (
+                          <CommandItem
+                            value={employee.label}
+                            key={employee.value}
+                            onSelect={() => {
+                              form.setValue("leaderId", employee.value);
+                            }}>
+                            {employee.label}
+                            <CheckIcon
+                              className={cn(
+                                "ml-auto h-4 w-4",
+                                employee.value === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <FormDescription>
+                  This is the employee that will be the Project Leader
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -136,7 +218,7 @@ export function ProjectForm({className, employees, ...props}: FormProps) {
               <FormItem>
                 <FormLabel>Type</FormLabel>
                 <FormControl>
-                  <Input placeholder="Type" {...field} value={""} />
+                  <Input placeholder="Type" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
