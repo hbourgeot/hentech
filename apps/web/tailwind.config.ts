@@ -72,5 +72,13 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), function({addUtilities}) {
+    const utilities = {
+      ".h-screenav": {
+        height: 'calc(100vh - 40px)',
+      }
+    }
+
+    addUtilities(utilities, ["hover"])
+  }],
 }
