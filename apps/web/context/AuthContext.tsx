@@ -8,7 +8,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 interface AuthContextProps {
   user: Employee | null;
   isAuthenticated: boolean;
-  logout: () => void
+  logout: () => void;
   // ... otros campos y métodos que necesites
 }
 
@@ -52,10 +52,15 @@ export const AuthProvider: React.FC<{ initialCookies?: string }> = ({
         })
         .catch((e) => {
           setUserData(null);
+          router.push("/login");
           setIsAuthenticated(false);
         });
+    } else {
+      setUserData(null);
+      router.push("/login");
+      setIsAuthenticated(false);
     }
-  }, [token]);
+  }, [token, router]);
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated, logout }}>
