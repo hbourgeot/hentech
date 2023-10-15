@@ -26,7 +26,7 @@ export class AuthService {
       };
     }
 
-    if (await bcrypt.compare(pass, user.password)) {
+    if (!(await bcrypt.compare(pass, user.password))) {
       return {
         token: null,
         ok: false,
