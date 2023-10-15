@@ -120,12 +120,14 @@ export function Nav() {
             ? "bg-white w-full flex justify-between items-center px-3 sticky top-0"
             : "bg-transparent w-full flex justify-between items-center px-3 sticky top-0"
         }>
-        <h1 className="text-2xl font-bold">
-          <a href="/" className="text-primary">
-            HenTech
-          </a>
-        </h1>
-        <ModeToggle/>
+        <div className="flex justify-between items-center gap-x-4">
+          <h1 className="text-2xl font-bold">
+            <a href="/" className="text-primary">
+              HenTech
+            </a>
+          </h1>
+          <ModeToggle />
+        </div>
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -198,7 +200,7 @@ export function Nav() {
                     method: "POST",
                   }).then((response) => {
                     if (response.ok) {
-                      logout()
+                      logout();
                       router.push("/login");
                     }
                   });
