@@ -14,7 +14,6 @@ interface Props extends React.HTMLAttributes<HTMLSelectElement>{
   data: { label: string, value: string }[];
   placeholder: string;
   label: string;
-  bind: any;
 }
 export function SelectInput({...props}:Props) {
   return (
@@ -26,7 +25,7 @@ export function SelectInput({...props}:Props) {
         <SelectGroup>
           <SelectLabel>{props.label}</SelectLabel>
           {props.data.map(it => (
-            <SelectItem key={it.value} value={it.value} onChange={() => props.bind = it.value}>{it.label}</SelectItem>
+            <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>
           ))}
         </SelectGroup>
       </SelectContent>
