@@ -4,12 +4,15 @@ import { SelectInput } from '@/components/Select';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input'
 import { client } from '@/lib/axios';
-import { Employee } from '@/lib/types';
+import { Employee, Project } from '@/lib/types';
 import { NextPage, GetServerSideProps } from 'next'
 import * as z from "zod"
+import { DataTable } from './data-table';
+import { columns } from './columns';
 
 interface Props {
-  employees: {label: string, value: number}
+  employees: { label: string, value: number }[],
+  projects: Project[]
 }
 
 const stateOptions = [
@@ -20,7 +23,7 @@ const stateOptions = [
   { label: "Abandoned", value: "Abandoned" },
 ];
 
-function Index({employees}: Props) {
+function Index({employees, projects}: Props) {
   return (
     <>
       <Nav />
@@ -28,7 +31,7 @@ function Index({employees}: Props) {
         <h2 className="text-3xl font-semibold text-center py-3">
           Search projects
         </h2>
-        <div className="mx-auto pb-16 pt-4 flex items-start justify-between">
+        <div className="mx-auto pb-16 pt-4 max-w-[85vw]">
           <form className="max-w-[70vw] mx-auto flex flex-wrap w-full place-content-center">
             <span className="w-1/3 p-4">
               <label htmlFor="id">Project ID</label>
@@ -71,6 +74,9 @@ function Index({employees}: Props) {
               <Button variant={'default'} >Search</Button>
             </div>
           </form>
+          <div className="mx-auto w-[80vw] my-4">
+          <DataTable columns={columns} data={projects}/>
+          </div>
         </div>
       </section>
     </>
@@ -86,9 +92,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       label: `${item.name} ${item.lastName}`,
       value: item.id,
     }));
+
+    const { data: projects }: { data: Project[] } = await client.get("/api/projects")
     return {
       props: {
         employees: employees,
+        projects: projects
       },
     };
   } catch (e) {
