@@ -14,6 +14,7 @@ import { NavigationMenuViewport } from "@radix-ui/react-navigation-menu";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "./ui/button";
+import { ModeToggle } from "./ModeToggle";
 
 let projectLinks: { title: string; href: string; description: string }[] = [
   {
@@ -124,6 +125,7 @@ export function Nav() {
             HenTech
           </a>
         </h1>
+        <ModeToggle/>
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>

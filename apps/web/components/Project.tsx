@@ -23,6 +23,8 @@ import { SelectInput } from "./Select";
 import { CheckIcon, SlidersHorizontal } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "@radix-ui/react-popover";
 import { CommandInput, Command, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command";
+import { useToast } from "./ui/use-toast";
+import { useRouter } from "next/router";
 
 const projectSchema = z.object({
   name: z
@@ -61,10 +63,14 @@ const stateOptions = [
 ];
 
 interface FormProps extends React.HTMLAttributes<HTMLDivElement>{
-  employees: { label: string; value: number; }[]
+  employees: { label: string; value: number; }[],
+  edit: boolean,
 }
 
-export function ProjectForm({ className, employees, ...props }: FormProps) {
+export function ProjectForm({ className, employees, edit, ...props }: FormProps) {
+  const { toast } = useToast();
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
@@ -77,8 +83,17 @@ export function ProjectForm({ className, employees, ...props }: FormProps) {
   });
 
   async function onSubmit(values: z.infer<typeof projectSchema>) {
-    const {data} = await client.post('/api/projects', values)
-    console.log(data)
+    const {data, status} = await client.post('/api/projects', values)
+    if (status >= 400) {
+      toast({title: '¡Oh oh!', description: 'There was an error creating the project, try again later.'})
+    } else {
+      toast({
+        title: "¡Yay!",
+        description:
+          !edit ? "Project successfully created" : 'Project successfully modified',
+      });
+      router.push('/internal/projects')
+    }
   }
 
   return (
