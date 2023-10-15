@@ -1,24 +1,28 @@
-import { Inject, Injectable } from '@nestjs/common';
-import {
-  DataSource,
-  DeleteResult,
-  FindOptionsOrder,
-  FindOptionsWhere,
-  Repository,
-} from 'typeorm';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { FindOptionsOrder, FindOptionsWhere, Repository } from 'typeorm';
 import { Project } from './entity/project.entity';
-import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
-import { ProjectSearchDTO } from './dto/project.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UpdateProjectDto } from './dto/project.dto';
+import { Employee } from 'src/employee/entity/employee.entity';
 
 @Injectable()
 export class ProjectService {
-  constructor(@InjectRepository(Project) private repo: Repository<Project>) {}
+  constructor(
+    @InjectRepository(Project) private repo: Repository<Project>,
+    @InjectRepository(Employee) private emprepo: Repository<Employee>,
+  ) {}
 
   async getOne(project: number): Promise<Project | null> {
     return this.repo.findOne({
       where: { id: project },
       relations: { leader: true, tasks: true, employees: true },
+    });
+  }
+
+  async getForPatch(project: number): Promise<Project | null> {
+    return this.repo.findOne({
+      where: { id: project },
+      relations: { leader: true, tasks: false, employees: false },
     });
   }
 
@@ -41,45 +45,31 @@ export class ProjectService {
     return await this.repo.save(data);
   }
 
-  async update(
-    where: FindOptionsWhere<Project>,
-    data: QueryDeepPartialEntity<Project>,
-  ): Promise<Project> {
-    await this.repo.update(where, data);
-    return await this.repo.findOneByOrFail(where);
-  }
-
-  async del(criteria: FindOptionsWhere<Project>): Promise<DeleteResult> {
-    return await this.repo.delete(criteria);
-  }
-
-  /* async search(
-  where: FindOptionsWhere<Project>,
-): Promise<Project[]> {
-  return await this.repo.findBy({...where});
-} */
-
-  async search(params: ProjectSearchDTO) {
-    const query = this.repo
-      .createQueryBuilder('project')
-      .leftJoinAndSelect('project.leader', 'leader');
-
-    if (params.leaderId) {
-      query.andWhere("LOWER(CONCAT(leader.name, ' ', leader.lastName)) LIKE :leaderId", {
-        leaderId: `%${params.leaderId.toLowerCase()}%`,
-      });
+  async update(data: UpdateProjectDto): Promise<Project> {
+    const existingProject = await this.repo.findOne({ where: { id: data.id } });
+    if (!existingProject) {
+      throw new NotFoundException('Project not found');
     }
 
-    for (const key in params) {
-      //@ts-ignore
-      if (params[key] && key !== 'leaderId') {
-        query.andWhere(`LOWER(project.${key}) LIKE :${key}`, {
-          //@ts-ignore
-          [key]: `%${params[key].toLowerCase()}%`,
-        });
+    // Update the existing project with the new data.
+    existingProject.name = data.name;
+    existingProject.comercialDesignation = data.comercialDesignation;
+    existingProject.status = data.status;
+    existingProject.type = data.type;
+    existingProject.id = data.id;
+
+    // If leader needs to be updated, fetch and set.
+    if (data.leader && data.leader.id) {
+      const newLeader = await this.emprepo.findOne({
+        where: { id: data.leader.id },
+      });
+      if (newLeader) {
+        existingProject.leader = newLeader;
       }
     }
 
-    return query.getMany();
+    await this.repo.save(existingProject);
+
+    return existingProject;
   }
 }

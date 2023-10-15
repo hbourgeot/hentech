@@ -20,20 +20,23 @@ export class CreateProjectDto {
 
 // Update
 export class UpdateProjectDto {
-  @ApiPropertyOptional()
-  name?: string;
+  @ApiProperty()
+  id!: number;
 
-  @ApiPropertyOptional()
-  comercialDesignation?: string;
+  @ApiProperty()
+  name!: string;
 
-  @ApiPropertyOptional()
-  status?: string;
+  @ApiProperty()
+  comercialDesignation!: string;
 
-  @ApiPropertyOptional()
-  type?: string;
-  
-  @ApiPropertyOptional()
-  leader?: {
+  @ApiProperty()
+  status!: string;
+
+  @ApiProperty()
+  type!: string;
+
+  @ApiProperty()
+  leader!: {
     id: number;
   };
 }

@@ -3,11 +3,9 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
-  Query,
   NotFoundException,
+  Put,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import {
@@ -16,13 +14,8 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import {
-  CreateProjectDto,
-  ProjectSearchDTO,
-  UpdateProjectDto,
-} from './dto/project.dto';
+import { CreateProjectDto, UpdateProjectDto } from './dto/project.dto';
 import { Project } from './entity/project.entity';
-import { DeleteResult, FindOptionsWhere, Like } from 'typeorm';
 import { Employee } from 'src/employee/entity/employee.entity';
 import { EmployeeProjectService } from 'src/employee-project/employeeProject.service';
 
@@ -71,24 +64,11 @@ export class ProjectController {
   }
 
   @ApiOkResponse({ type: Project })
-  @Patch('project/:id')
+  @Put()
   async updateEmployee(
-    @Param('id') stringId: string,
     @Body() updatedEmployee: UpdateProjectDto,
   ): Promise<Project> {
-    const id = Number(+stringId);
-    const project = (await this.projectService.getOne(id)) as Project;
-    return await this.projectService.update(
-      { ...project },
-      { ...updatedEmployee },
-    );
-  }
-
-  @ApiOkResponse({ type: Project })
-  @Delete('project/:id')
-  async deleteEmployee(@Param('id') stringId: string): Promise<DeleteResult> {
-    const id = Number(+stringId);
-    return await this.projectService.del({ id });
+    return await this.projectService.update(updatedEmployee);
   }
 
   @Get('project/:id/employees')
@@ -110,10 +90,5 @@ export class ProjectController {
         },
       },
     );
-  }
-
-  @Get('search')
-  async searchProjects(@Query() search: ProjectSearchDTO) {
-    return await this.projectService.search(search);
   }
 }

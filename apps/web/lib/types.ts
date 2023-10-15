@@ -31,5 +31,5 @@ export interface Project {
   name: string;
   status: string;
   tasks: any[];
-  type: null | string;
+  type: string;
 }
