@@ -30,7 +30,7 @@ export class Project {
   @Column({ length: 50 })
   status!: string;
 
-  @Column({length: 50, nullable: true})
+  @Column({ length: 50, nullable: true })
   type!: string;
 
   @ApiProperty({ type: () => Employee })

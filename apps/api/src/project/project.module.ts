@@ -5,9 +5,13 @@ import { EmployeeProjectService } from 'src/employee-project/employeeProject.ser
 import { EmployeeProjectModule } from 'src/employee-project/employee-project.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Project } from './entity/project.entity';
+import { Employee } from 'src/employee/entity/employee.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Project]), EmployeeProjectModule],
+  imports: [
+    TypeOrmModule.forFeature([Project, Employee]),
+    EmployeeProjectModule,
+  ],
   controllers: [ProjectController],
   providers: [ProjectService, EmployeeProjectService],
 })
