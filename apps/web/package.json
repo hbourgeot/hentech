@@ -35,6 +35,7 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "@tanstack/react-table": "^8.10.7",
     "@types/cookie": "^0.5.2",
     "@types/jsonwebtoken": "^9.0.3",
     "@types/node": "latest",
