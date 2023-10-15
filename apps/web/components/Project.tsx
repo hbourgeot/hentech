@@ -18,22 +18,39 @@ import * as React from "react";
 import { Button } from "./ui/button";
 import { Combobox } from "./Combobox";
 import { client } from "@/lib/axios";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 import { SelectInput } from "./Select";
 import { CheckIcon, SlidersHorizontal } from "lucide-react";
-import { Popover, PopoverTrigger, PopoverContent } from "@radix-ui/react-popover";
-import { CommandInput, Command, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@radix-ui/react-popover";
+import {
+  CommandInput,
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from "@/components/ui/command";
 import { useToast } from "./ui/use-toast";
 import { useRouter } from "next/router";
+import { Project } from "@/lib/types";
 
 const projectSchema = z.object({
   name: z
     .string()
-    .min(1,{ message: "Name is required" })
+    .min(1, { message: "Name is required" })
     .max(50, { message: "Name cannot exceed 50 characters" }),
   comercialDesignation: z
     .string()
-    .min(1,{ message: "Commercial Designation is required" })
+    .min(1, { message: "Commercial Designation is required" })
     .max(50, { message: "Commercial Designation cannot exceed 50 characters" }),
   status: z
     .string()
@@ -49,7 +66,7 @@ const projectSchema = z.object({
     }),
   type: z
     .string()
-    .min(1,{message: "Type is required"})
+    .min(1, { message: "Type is required" })
     .max(50, { message: "Type cannot exceed 50 characters" })
     .nullable(),
 });
@@ -62,37 +79,58 @@ const stateOptions = [
   { label: "Abandoned", value: "Abandoned" },
 ];
 
-interface FormProps extends React.HTMLAttributes<HTMLDivElement>{
-  employees: { label: string; value: number; }[],
-  edit: boolean,
+interface FormProps extends React.HTMLAttributes<HTMLDivElement> {
+  employees: { label: string; value: number }[];
+  edit?: boolean;
+  values?: Project;
 }
 
-export function ProjectForm({ className, employees, edit, ...props }: FormProps) {
+export function ProjectForm({
+  className,
+  employees,
+  edit,
+  values,
+  ...props
+}: FormProps) {
   const { toast } = useToast();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
-      name: "",
-      comercialDesignation: "",
-      status: "",
-      leaderId: null,
-      type: "",
+      name: values?.name ?? "",
+      comercialDesignation: values?.comercialDesignation ?? "",
+      status: values?.status ?? "",
+      leaderId: values?.leader.id ?? null,
+      type: values?.type ?? "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof projectSchema>) {
-    const {data, status} = await client.post('/api/projects', values)
+  async function onSubmit(json: z.infer<typeof projectSchema>) {
+    console.log(json)
+    let status: number = 0;
+    if (edit) {
+      const { status: st } = await client.put("/api/projects", {...json, id: values?.id});
+      status = st;
+    } else {
+      const { status: st } = await client.post("/api/projects", json);
+      status = st;
+    }
+
     if (status >= 400) {
-      toast({title: '¡Oh oh!', description: 'There was an error creating the project, try again later.'})
+      toast({
+        title: "¡Oh oh!",
+        description:
+          "There was an error creating the project, try again later.",
+      });
     } else {
       toast({
         title: "¡Yay!",
-        description:
-          !edit ? "Project successfully created" : 'Project successfully modified',
+        description: !edit
+          ? "Project successfully created"
+          : "Project successfully modified",
       });
-      router.push('/internal/projects')
+      !edit ? router.push("/internal/projects") : router.reload();
     }
   }
 
@@ -153,9 +191,7 @@ export function ProjectForm({ className, employees, edit, ...props }: FormProps)
                     ))}
                   </SelectContent>
                 </Select>
-                <FormDescription>
-                  Status of the project
-                </FormDescription>
+                <FormDescription>Status of the project</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
